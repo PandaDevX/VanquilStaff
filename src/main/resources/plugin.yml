@@ -5,5 +5,8 @@ api-version: 1.16
 commands:
    slowchat:
       description: slows chat
+      aliases: [chatslow]
    unslow:
       description: unslow chat
+   freeze:
+      description: freeze command

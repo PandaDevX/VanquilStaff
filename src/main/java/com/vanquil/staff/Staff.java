@@ -3,6 +3,9 @@ package com.vanquil.staff;
 import com.vanquil.staff.chat.command.SlowChatCommand;
 import com.vanquil.staff.chat.command.UnSlowChatCommand;
 import com.vanquil.staff.chat.events.ChatListener;
+import com.vanquil.staff.player.command.FreezeCommand;
+import com.vanquil.staff.player.events.FreezeListener;
+import com.vanquil.staff.utility.FileUtil;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class Staff extends JavaPlugin {
@@ -17,8 +20,15 @@ public final class Staff extends JavaPlugin {
         // instance of plugin
         instance = this;
 
-        // save configuration
+        // save configurations
+
+        // config.yml
         saveDefaultConfig();
+        // words.yml
+        FileUtil fileUtil = new FileUtil(this, "words.yml", true);
+        fileUtil.createFile();
+        getLogger().info("Storage loaded");
+        fileUtil = null;
 
         // chat handler
 
@@ -27,6 +37,17 @@ public final class Staff extends JavaPlugin {
         new UnSlowChatCommand(this);
         // listener
         new ChatListener(this);
+
+        // player handlers
+
+        // commands
+        new FreezeCommand(this);
+
+        // listeners
+        new FreezeListener(this);
+
+
+        getLogger().info("Commands and Listeners loaded");
 
 
     }

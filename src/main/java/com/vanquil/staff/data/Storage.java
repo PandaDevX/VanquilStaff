@@ -1,7 +1,5 @@
 package com.vanquil.staff.data;
 
-import com.vanquil.staff.Staff;
-
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -15,5 +13,6 @@ public final class Storage {
     // players
     public static Set<String> frozenPlayers = new HashSet<>();
     public static Set<String> filterAlerts = new HashSet<>();
+    public static HashMap<String, String> blackListPlayers = new HashMap<>();
 
 }

@@ -21,7 +21,7 @@ public class FilterCommand implements CommandExecutor {
 
         // check permission
 
-        if(!sender.hasPermission("staff.chat.slow")) {
+        if(!sender.hasPermission("staff.chat.filter")) {
             Utility.sendNoPermissionMessage(sender);
             return true;
         }

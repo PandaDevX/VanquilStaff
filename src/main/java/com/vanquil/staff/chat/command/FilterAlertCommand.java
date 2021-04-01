@@ -20,7 +20,7 @@ public class FilterAlertCommand implements CommandExecutor {
 
         // check permission
 
-        if(!sender.hasPermission("staff.chat.slow")) {
+        if(!sender.hasPermission("staff.chat.falerts")) {
             Utility.sendNoPermissionMessage(sender);
             return true;
         }

@@ -1,4 +1,4 @@
-name: Staff
+name: VanquilStaff
 version: ${project.version}
 main: com.vanquil.staff.Staff
 api-version: 1.16
@@ -16,3 +16,9 @@ commands:
       description: toggle filter system
    blacklist:
       description: blacklist a player
+   revive:
+      description: restore the inventory
+      aliases: [invrestore]
+   vanish:
+      description: allow you to hide
+      aliases: [v, hidestaff]

@@ -1,9 +1,12 @@
 package com.vanquil.staff.utility;
 
 import com.vanquil.staff.Staff;
+import com.vanquil.staff.data.Storage;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+
 import java.util.*;
 
 public final class Utility {
@@ -145,5 +148,25 @@ public final class Utility {
             return Arrays.equals(a1, a2);
         }
         return false;
+    }
+
+    public static void clearInventory(Player player) {
+        player.getInventory().clear();
+        player.getInventory().setHelmet(null);
+        player.getInventory().setChestplate(null);
+        player.getInventory().setLeggings(null);
+        player.getInventory().setBoots(null);
+    }
+
+    public static void restoreInventory(Player player) {
+        ItemStack[] contents = Storage.playerInventory.getOrDefault(player, null);
+        if(contents == null) {
+            player.getInventory().clear();
+        }
+        player.getInventory().setContents(contents);
+    }
+
+    public static void saveInventory(Player player) {
+        Storage.playerInventory.put(player.getUniqueId().toString(), player.getInventory().getContents());
     }
 }

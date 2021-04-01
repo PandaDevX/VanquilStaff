@@ -11,3 +11,19 @@ ChatControl:
 # slow chat ( seconds )
   default: 0
   message: '&cYou can chat again in &6{cooldown} &csecond(s)'
+
+###
+##
+# Staff Vanish
+Staff Vanish:
+  invisibility: true
+  hide-message: '&aYou have been vanished'
+  show-message: '&aYou are no longer vanished'
+
+###
+##
+# Inventory Revive
+Restore Inventory:
+   message: '&6/revive: &fto restore your inventory'
+   unavailable: '&c&lHey &fyou have no inventory to restore'
+   success: '&aSuccessfully restored inventory'

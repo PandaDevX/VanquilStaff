@@ -29,7 +29,7 @@ public class UnSlowChatCommand implements CommandExecutor {
         //qualifications passed
 
         // change the data
-        Storage.slow = plugin.getConfig().getLong("ChatControl.default");
+        Storage.defaultCD.remove("vanquil");
 
         // send succeeding message
         sender.sendMessage(Utility.colorize("&aSuccessfully changed chat interval to &6default"));

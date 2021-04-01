@@ -10,3 +10,7 @@ commands:
       description: unslow chat
    freeze:
       description: freeze command
+   falerts:
+      description: toggle filter alerts
+   filter:
+      description: toggle filter system

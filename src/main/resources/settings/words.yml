@@ -1,3 +1,7 @@
+# Toggleable
+Enable: true
+Message: '&c&lHey &fyou cannot swear'
+# Words to look for
 Words:
    - 'shit'
    - 'fuck'

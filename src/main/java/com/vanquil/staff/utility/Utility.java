@@ -14,11 +14,11 @@ public final class Utility {
     }
 
     public static void sendNoPermissionMessage(CommandSender sender) {
-        sender.sendMessage(colorize("&c&lHey &fyou don't have permission to do that"));
+        sender.sendMessage(colorize(Staff.getInstance().getConfig().getString("No Permission")));
     }
 
     public static void sendNoPermissionMessage(Player sender) {
-        sender.sendMessage(colorize("&c&lHey &fyou don't have permission to do that"));
+        sender.sendMessage(colorize(Staff.getInstance().getConfig().getString("No Permission")));
     }
 
     public static void sendCorrectArgument(CommandSender sender, String argument) {

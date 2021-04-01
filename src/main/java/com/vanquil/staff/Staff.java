@@ -1,5 +1,7 @@
 package com.vanquil.staff;
 
+import com.vanquil.staff.chat.command.FilterAlertCommand;
+import com.vanquil.staff.chat.command.FilterCommand;
 import com.vanquil.staff.chat.command.SlowChatCommand;
 import com.vanquil.staff.chat.command.UnSlowChatCommand;
 import com.vanquil.staff.chat.events.ChatListener;
@@ -30,15 +32,22 @@ public final class Staff extends JavaPlugin {
         getLogger().info("Storage loaded");
         fileUtil = null;
 
-        // chat handler
+        /*
+        chat handlers
+         */
 
         // commands
         new SlowChatCommand(this);
         new UnSlowChatCommand(this);
+        new FilterAlertCommand(this);
+        new FilterCommand(this);
+
         // listener
         new ChatListener(this);
 
-        // player handlers
+        /*
+        player handlers
+         */
 
         // commands
         new FreezeCommand(this);

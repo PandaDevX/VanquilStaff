@@ -1,8 +1,13 @@
 ###
 ##
+# No permission message
+No Permission: '&c&lHey &fyou dont have permission to do that'
+
+###
+##
 # Chat Control
 
 ChatControl:
 # slow chat ( seconds )
   default: 0
-
+  message: '&cYou can chat again in &6{cooldown} &csecond(s)'

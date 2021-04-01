@@ -40,10 +40,10 @@ public class SlowChatCommand implements CommandExecutor {
         // passed qualifications
 
         // change the data
-        Storage.slow = Integer.parseInt(args[0]);
+        Storage.defaultCD.put("vanquil", Integer.parseInt(args[0]));
 
         // send succeeding message
-        sender.sendMessage(Utility.colorize("&aSuccessfully changed chat interval to &6" + Storage.slow + " &asecond(s)"));
+        sender.sendMessage(Utility.colorize("&aSuccessfully changed chat interval to &6" + Storage.defaultCD.get("vanquil") + " &asecond(s)"));
         return false;
     }
 }

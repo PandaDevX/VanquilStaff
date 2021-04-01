@@ -1,0 +1,9 @@
+name: Staff
+version: ${project.version}
+main: com.vanquil.staff.Staff
+api-version: 1.16
+commands:
+   slowchat:
+      description: slows chat
+   unslow:
+      description: unslow chat

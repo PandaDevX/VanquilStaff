@@ -1,0 +1,8 @@
+###
+##
+# Chat Control
+
+ChatControl:
+# slow chat ( seconds )
+  default: 0
+

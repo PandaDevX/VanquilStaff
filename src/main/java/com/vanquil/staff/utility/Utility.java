@@ -3,11 +3,15 @@ package com.vanquil.staff.utility;
 import com.vanquil.staff.Staff;
 import com.vanquil.staff.data.Storage;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public final class Utility {
 
@@ -168,5 +172,54 @@ public final class Utility {
 
     public static void saveInventory(Player player) {
         Storage.playerInventory.put(player.getUniqueId().toString(), player.getInventory().getContents());
+    }
+
+    public static ItemStack getSkull(OfflinePlayer player, String displayName, String... lore) {
+
+        boolean isNewVersion = Arrays.stream(Material.values())
+                .map(Material::name)
+                .collect(Collectors.toList())
+                .contains("PLAYER_HEAD");
+
+        Material type = Material.matchMaterial(isNewVersion ? "PLAYER_HEAD" : "SKULL_ITEM");
+
+        ItemStack item = new ItemStack(type);
+
+        if(!isNewVersion) {
+            item.setDurability((short) 3);
+        }
+
+        SkullMeta meta = (SkullMeta) item.getItemMeta();
+        meta.setOwningPlayer(player);
+        meta.setDisplayName(Utility.colorize(displayName));
+        meta.setLore(Arrays.asList(lore));
+
+        item.setItemMeta(meta);
+
+        return item;
+    }
+
+    public static ItemStack getSkull(OfflinePlayer player, String displayName) {
+
+        boolean isNewVersion = Arrays.stream(Material.values())
+                .map(Material::name)
+                .collect(Collectors.toList())
+                .contains("PLAYER_HEAD");
+
+        Material type = Material.matchMaterial(isNewVersion ? "PLAYER_HEAD" : "SKULL_ITEM");
+
+        ItemStack item = new ItemStack(type);
+
+        if(!isNewVersion) {
+            item.setDurability((short) 3);
+        }
+
+        SkullMeta meta = (SkullMeta) item.getItemMeta();
+        meta.setOwningPlayer(player);
+        meta.setDisplayName(Utility.colorize(displayName));
+
+        item.setItemMeta(meta);
+
+        return item;
     }
 }

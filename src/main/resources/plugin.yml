@@ -22,3 +22,6 @@ commands:
    vanish:
       description: allow you to hide
       aliases: [v, hidestaff]
+   staffs:
+      description: check all available staffs
+      aliases: [slist, stafflist, onlinestaff]

@@ -5,13 +5,11 @@ import com.vanquil.staff.chat.command.FilterCommand;
 import com.vanquil.staff.chat.command.SlowChatCommand;
 import com.vanquil.staff.chat.command.UnSlowChatCommand;
 import com.vanquil.staff.chat.events.ChatListener;
-import com.vanquil.staff.player.command.BlackListCommand;
-import com.vanquil.staff.player.command.FreezeCommand;
-import com.vanquil.staff.player.command.ReviveCommand;
-import com.vanquil.staff.player.command.VanishCommand;
+import com.vanquil.staff.player.command.*;
 import com.vanquil.staff.player.events.BlackListListener;
 import com.vanquil.staff.player.events.DeathListener;
 import com.vanquil.staff.player.events.FreezeListener;
+import com.vanquil.staff.player.events.StaffsListener;
 import com.vanquil.staff.utility.FileUtil;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -33,6 +31,8 @@ public final class Staff extends JavaPlugin {
         saveDefaultConfig();
         // words.yml
         FileUtil fileUtil = new FileUtil(this, "words.yml", true);
+        fileUtil.createFile();
+        fileUtil = new FileUtil(this, "staffs.yml", true);
         fileUtil.createFile();
         getLogger().info("Storage loaded");
         fileUtil = null;
@@ -59,11 +59,13 @@ public final class Staff extends JavaPlugin {
         new BlackListCommand(this);
         new ReviveCommand(this);
         new VanishCommand(this);
+        new StaffsCommand(this);
 
         // listeners
         new FreezeListener(this);
         new BlackListListener(this);
         new DeathListener(this);
+        new StaffsListener(this);
 
 
         getLogger().info("Commands and Listeners loaded");

@@ -6,10 +6,7 @@ import com.vanquil.staff.chat.command.SlowChatCommand;
 import com.vanquil.staff.chat.command.UnSlowChatCommand;
 import com.vanquil.staff.chat.events.ChatListener;
 import com.vanquil.staff.player.command.*;
-import com.vanquil.staff.player.events.BlackListListener;
-import com.vanquil.staff.player.events.DeathListener;
-import com.vanquil.staff.player.events.FreezeListener;
-import com.vanquil.staff.player.events.StaffsListener;
+import com.vanquil.staff.player.events.*;
 import com.vanquil.staff.utility.FileUtil;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -60,12 +57,14 @@ public final class Staff extends JavaPlugin {
         new ReviveCommand(this);
         new VanishCommand(this);
         new StaffsCommand(this);
+        new CPSCommand(this);
 
         // listeners
         new FreezeListener(this);
         new BlackListListener(this);
         new DeathListener(this);
         new StaffsListener(this);
+        new CPSListener(this);
 
 
         getLogger().info("Commands and Listeners loaded");

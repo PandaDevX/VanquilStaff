@@ -25,3 +25,6 @@ commands:
    staffs:
       description: check all available staffs
       aliases: [slist, stafflist, onlinestaff]
+   cps:
+      description: check all of cps
+      aliases: [cpsreport]

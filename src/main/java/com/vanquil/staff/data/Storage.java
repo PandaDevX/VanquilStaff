@@ -16,6 +16,10 @@ public final class Storage {
     public static Set<String> frozenPlayers = new HashSet<>();
     public static Set<String> filterAlerts = new HashSet<>();
     public static Set<String> vanishedPlayers = new HashSet<>();
+    public static Set<String> cpsListeners = new HashSet<>();
+    public static HashMap<String, Integer> cpsTaskID = new HashMap<>();
+    public static HashMap<String, Integer> clicksCount = new HashMap<>();
+    public static HashMap<String, Long> clicksInterval = new HashMap<>();
     public static HashMap<String, String> blackListPlayers = new HashMap<>();
     public static HashMap<String, ItemStack[]> playerInventory = new HashMap<>();
 

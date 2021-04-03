@@ -27,3 +27,9 @@ Restore Inventory:
    message: '&6/revive: &fto restore your inventory'
    unavailable: '&c&lHey &fyou have no inventory to restore'
    success: '&aSuccessfully restored inventory'
+
+###
+##
+# Clicks Per Second
+CPS:
+  left_click_only: true

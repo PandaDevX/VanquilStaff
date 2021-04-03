@@ -26,11 +26,10 @@ public class StaffGui {
             List<String> staff = new ArrayList<>(fileUtil.get().getConfigurationSection("Staffs").getKeys(false));
             Player player = Bukkit.getPlayer(staff.get(i));
             if(player == null) {
-                player = null;
                 continue;
             }
-            ItemStack head = Utility.getSkull(Bukkit.getOfflinePlayer(staff.get(i)), fileUtil.get().getString("Staffs." + staff + ".prefix") + " " + staff);
-
+            String name = fileUtil.get().getBoolean("Staffs." + staff.get(i) + ".show_realname") ? staff.get(i) : player.getDisplayName();
+            ItemStack head = Utility.getSkull(Bukkit.getOfflinePlayer(staff.get(i)), fileUtil.get().getString("Staffs." + staff + ".prefix") + name);
             builder.setItem(i + 1, head);
 
             staff = null;
@@ -56,6 +55,6 @@ public class StaffGui {
             return 1;
         }
         fileUtil = null;
-        return numbers / 9;
+        return numbers / 9 + Math.min(numbers % 9, 1);
     }
 }

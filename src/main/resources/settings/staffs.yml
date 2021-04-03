@@ -1,5 +1,5 @@
 Staffs:
 
   RedSpeaks:
-    prefix: '&8[&eDeveloper]'
+    prefix: '&8[&eDeveloper] &b'
     show_realname: true

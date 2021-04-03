@@ -1,5 +1,15 @@
 ###
 ##
+# Database of reports, pins
+MySQL:
+  host: 'localhost'
+  port: '3306'
+  database: 'mydb'
+  username: 'root'
+  password: ''
+
+###
+##
 # No permission message
 No Permission: '&c&lHey &fyou dont have permission to do that'
 

@@ -1,4 +1,4 @@
-package com.vanquil.staff.player.events;
+package com.vanquil.staff.player.staffs;
 
 import com.vanquil.staff.Staff;
 import com.vanquil.staff.utility.Utility;

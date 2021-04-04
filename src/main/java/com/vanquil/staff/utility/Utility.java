@@ -2,6 +2,8 @@ package com.vanquil.staff.utility;
 
 import com.vanquil.staff.Staff;
 import com.vanquil.staff.data.Storage;
+import com.vanquil.staff.database.Report;
+import com.vanquil.staff.database.ReportDatabase;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -221,5 +223,24 @@ public final class Utility {
         item.setItemMeta(meta);
 
         return item;
+    }
+
+    public static Set<String> getStaffNames() {
+        FileUtil fileUtil = new FileUtil(Staff.getInstance(), "staffs.yml", false);
+        return fileUtil.get().getConfigurationSection("Staffs").getKeys(false);
+    }
+
+    public static Set<OfflinePlayer> getReportedPlayers() {
+        Set<OfflinePlayer> reportedPlayers = new HashSet<>();
+        ReportDatabase reportDatabase = new ReportDatabase();
+        if(!reportDatabase.getReports().isEmpty()) {
+            Iterator<Report> reportIterator = reportDatabase.getReports().iterator();
+            while(reportIterator.hasNext()) {
+                reportedPlayers.add(reportIterator.next().getReportedPlayer());
+            }
+            reportIterator = null;
+        }
+        reportDatabase = null;
+        return reportedPlayers;
     }
 }

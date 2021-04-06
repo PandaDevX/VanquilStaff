@@ -33,6 +33,7 @@ public class StaffAuth implements Listener {
     @EventHandler
     public void onClose(InventoryCloseEvent e) {
 
+
         PinDatabase pinDatabase = new PinDatabase((Player) e.getPlayer());
         final String type = pinDatabase.isRegistered() ? "login" : "register";
         if(!e.getView().getTitle().endsWith("Pin")) return;

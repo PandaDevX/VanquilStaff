@@ -6,6 +6,7 @@ import com.vanquil.staff.database.PinDatabase;
 import com.vanquil.staff.gui.inventory.Pin;
 import com.vanquil.staff.utility.Utility;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -68,6 +69,9 @@ public class StaffAuth implements Listener {
         if(e.getCurrentItem() == null) return;
         if(!e.getCurrentItem().hasItemMeta()) return;
 
+        // play sound
+        ((Player)e.getWhoClicked()).playSound(e.getWhoClicked().getLocation(), Sound.ENTITY_CHICKEN_EGG, 5, 5);
+
         if(e.getCurrentItem().getItemMeta().getDisplayName().endsWith("Register")) {
             e.setCancelled(true);
 
@@ -113,7 +117,27 @@ public class StaffAuth implements Listener {
 
             if(pinDatabase.login(builder.toString())) {
                 e.getWhoClicked().closeInventory();
+                Storage.staffAttempt.remove(e.getWhoClicked().getUniqueId().toString());
+                return;
             }
+            int current = Storage.staffAttempt.getOrDefault(e.getWhoClicked().getUniqueId().toString(), 0);
+
+            if(current == (Staff.getInstance().getConfig().getInt("Auth Pin.max_attempt") - 1)) {
+                ((Player) e.getWhoClicked()).kickPlayer(Utility.colorize("&c&lHey &fYou reached the maximum amount of attempts"));
+                Storage.staffAttempt.remove(e.getWhoClicked().getUniqueId().toString());
+                Storage.playerIndexPin.remove(e.getWhoClicked().getUniqueId().toString());
+
+                if(Storage.staffInventory.containsKey(e.getWhoClicked().getUniqueId().toString())) {
+                    e.getWhoClicked().getInventory().setContents(Storage.staffInventory.get(e.getWhoClicked().getUniqueId().toString()));
+                    Storage.staffInventory.remove(e.getWhoClicked().getUniqueId().toString());
+                }
+                ((Player) e.getWhoClicked()).sendTitle(Utility.colorize("&6Auth Pin"), Utility.colorize("&aSuccessfully logged in"), 10, 70, 20);
+
+                Storage.playerIndexPin.remove(e.getWhoClicked().getUniqueId().toString());
+                return;
+            }
+            Storage.staffAttempt.put(e.getWhoClicked().getUniqueId().toString(), ++current);
+            Utility.showWrongInfo(e.getClickedInventory(), e.getSlot());
             return;
         }
 
@@ -127,8 +151,10 @@ public class StaffAuth implements Listener {
             e.setCancelled(true);
             int index = Storage.playerIndexPin.getOrDefault(e.getWhoClicked().getUniqueId().toString(), 0);
             e.setCancelled(true);
-            if(index == 0)
+            if(index <= 0) {
+                Storage.playerIndexPin.put(e.getWhoClicked().getUniqueId().toString(), 0);
                 return;
+            }
             Storage.playerIndexPin.put(e.getWhoClicked().getUniqueId().toString(), --index);
             e.getWhoClicked().getInventory().setItem(Storage.playerIndexPin.get(e.getWhoClicked().getUniqueId().toString()), null);
 

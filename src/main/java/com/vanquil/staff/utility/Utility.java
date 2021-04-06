@@ -12,6 +12,7 @@ import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -298,5 +299,17 @@ public final class Utility {
         }.runTaskLater(Staff.getInstance(), 40L);
 
         pinDatabase = null;
+    }
+
+    public static void showWrongInfo(Inventory inventory, int slot) {
+        ItemBuilder builder = new ItemBuilder(Material.REDSTONE_BLOCK);
+        builder.setName("&cWrong Password");
+        final ItemStack itemStack = inventory.getItem(slot);
+        inventory.setItem(slot, builder.build());
+        new BukkitRunnable() {
+            public void run() {
+                inventory.setItem(slot, itemStack);
+            }
+        }.runTaskLater(Staff.getInstance(), 60L);
     }
 }

@@ -1,6 +1,7 @@
 package com.vanquil.staff.database;
 
 import com.vanquil.staff.Staff;
+import com.vanquil.staff.data.Storage;
 import org.bukkit.entity.Player;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -34,6 +35,7 @@ public class PinDatabase {
     }
 
     public boolean login(String pin) {
+        Storage.playerIndexPin.remove(player);
         if(isRegistered()) {
             try {
                 PreparedStatement ps = preparedStatement("SELECT * FROM pins WHERE UUID=?");
@@ -53,6 +55,8 @@ public class PinDatabase {
     }
 
     public void logout() {
+        Storage.staffAttempt.remove(player.getUniqueId().toString());
+        Storage.playerIndexPin.remove(player);
         if(isRegistered()) {
             try {
                 PreparedStatement ps = preparedStatement("UPDATE pins SET LOGGED=? WHERE UUID=?");

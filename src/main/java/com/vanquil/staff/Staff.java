@@ -5,6 +5,7 @@ import com.vanquil.staff.chat.command.FilterCommand;
 import com.vanquil.staff.chat.command.SlowChatCommand;
 import com.vanquil.staff.chat.command.UnSlowChatCommand;
 import com.vanquil.staff.chat.events.ChatListener;
+import com.vanquil.staff.data.Storage;
 import com.vanquil.staff.database.DatabaseManager;
 import com.vanquil.staff.database.PinDatabase;
 import com.vanquil.staff.player.command.*;
@@ -117,12 +118,29 @@ public final class Staff extends JavaPlugin {
             // logout
             if(Utility.getStaffNames().contains(player.getName())) {
                 PinDatabase pinDatabase = new PinDatabase(player);
-                pinDatabase.logout();
+                if(pinDatabase.isLoggedIn()) {
+                    pinDatabase.logout();
+                }
                 // player logged out
-                System.out.println("Player" + player.getName() + " logged out");
                 pinDatabase=null;
             }
         }
+
+        // close all storages
+        Storage.staffAttempt.clear();
+        Storage.playerIndexPin.clear();
+        Storage.staffInventory.clear();
+        Storage.playerInventory.clear();
+        Storage.cpsListeners.clear();
+        Storage.clicksCount.clear();
+        Storage.clicksInterval.clear();
+        Storage.coolDown.clear();
+        Storage.cpsTaskID.clear();
+        Storage.defaultCD.clear();
+        Storage.blackListPlayers.clear();
+        Storage.vanishedPlayers.clear();
+        Storage.frozenPlayers.clear();
+        Storage.filterAlerts.clear();
 
         DatabaseManager.disconnect();
     }

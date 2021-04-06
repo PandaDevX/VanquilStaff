@@ -2,15 +2,19 @@ package com.vanquil.staff.utility;
 
 import com.vanquil.staff.Staff;
 import com.vanquil.staff.data.Storage;
+import com.vanquil.staff.database.PinDatabase;
 import com.vanquil.staff.database.Report;
 import com.vanquil.staff.database.ReportDatabase;
+import com.vanquil.staff.gui.inventory.Pin;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -226,7 +230,7 @@ public final class Utility {
     }
 
     public static Set<String> getStaffNames() {
-        FileUtil fileUtil = new FileUtil(Staff.getInstance(), "staffs.yml", false);
+        FileUtil fileUtil = new FileUtil(Staff.getInstance(), "staffs.yml", true);
         return fileUtil.get().getConfigurationSection("Staffs").getKeys(false);
     }
 
@@ -242,5 +246,57 @@ public final class Utility {
         }
         reportDatabase = null;
         return reportedPlayers;
+    }
+
+    public static void createReport(OfflinePlayer player, String report, OfflinePlayer reporter) {
+        ReportDatabase reportDatabase = new ReportDatabase();
+        reportDatabase.save(player, report, reporter);
+        reportDatabase = null;
+    }
+
+    public static void createReport(OfflinePlayer player, String report, OfflinePlayer reporter, Location location) {
+        ReportDatabase reportDatabase = new ReportDatabase();
+        reportDatabase.save(player, report, reporter, location);
+        reportDatabase = null;
+    }
+
+    public static void createReport(OfflinePlayer player, String report, OfflinePlayer reporter, Location location, String URL) {
+        ReportDatabase reportDatabase = new ReportDatabase();
+        reportDatabase.save(player, report, reporter, location, URL);
+        reportDatabase = null;
+    }
+
+    public static void changeState(OfflinePlayer player, String report) {
+        ReportDatabase reportDatabase = new ReportDatabase();
+        if(!reportDatabase.exists(player, report)) return;
+        if(reportDatabase.isOpen(player, report)) {
+            reportDatabase.close(player, report);
+        }
+        reportDatabase.open(player, report);
+    }
+
+    public static void auth(Player player) {
+        PinDatabase pinDatabase = new PinDatabase(player);
+        final String type = pinDatabase.isRegistered() ? "login" : "register";
+        if(pinDatabase.isLoggedIn()) return;
+
+
+        Storage.staffInventory.put(player.getUniqueId().toString(), player.getInventory().getContents());
+        player.getInventory().clear();
+
+
+
+        new BukkitRunnable() {
+            public void run () {
+
+                // open gui
+                Pin pin = new Pin();
+                pin.setup(type);
+                pin.openInventory(player);
+                pin = null;
+            }
+        }.runTaskLater(Staff.getInstance(), 40L);
+
+        pinDatabase = null;
     }
 }

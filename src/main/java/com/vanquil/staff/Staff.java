@@ -6,12 +6,17 @@ import com.vanquil.staff.chat.command.SlowChatCommand;
 import com.vanquil.staff.chat.command.UnSlowChatCommand;
 import com.vanquil.staff.chat.events.ChatListener;
 import com.vanquil.staff.database.DatabaseManager;
+import com.vanquil.staff.database.PinDatabase;
 import com.vanquil.staff.player.command.*;
 import com.vanquil.staff.player.events.*;
+import com.vanquil.staff.player.staffs.StaffAuth;
 import com.vanquil.staff.player.staffs.StaffJoin;
 import com.vanquil.staff.player.staffs.StaffQuit;
 import com.vanquil.staff.player.staffs.StaffsListener;
 import com.vanquil.staff.utility.FileUtil;
+import com.vanquil.staff.utility.Utility;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.sql.SQLException;
@@ -73,6 +78,7 @@ public final class Staff extends JavaPlugin {
         new CPSListener(this);
         new StaffJoin(this);
         new StaffQuit(this);
+        new StaffAuth(this);
 
 
         getLogger().info("Commands and Listeners loaded");
@@ -86,6 +92,17 @@ public final class Staff extends JavaPlugin {
         getLogger().info("Successfully connected to database");
 
 
+        // cps counter
+        CPSCounter counter = new CPSCounter();
+        counter.runTaskTimerAsynchronously(this, 0, 1);
+
+        // auth staffs
+        for(Player player : Bukkit.getOnlinePlayers()) {
+            if(Utility.getStaffNames().contains(player.getName())) {
+                Utility.auth(player);
+                continue;
+            }
+        }
     }
 
     @Override
@@ -93,6 +110,19 @@ public final class Staff extends JavaPlugin {
 
         //logger
         getLogger().info("Has been disabled");
+
+        for(Player player : Bukkit.getOnlinePlayers()) {
+
+            // if staff
+            // logout
+            if(Utility.getStaffNames().contains(player.getName())) {
+                PinDatabase pinDatabase = new PinDatabase(player);
+                pinDatabase.logout();
+                // player logged out
+                System.out.println("Player" + player.getName() + " logged out");
+                pinDatabase=null;
+            }
+        }
 
         DatabaseManager.disconnect();
     }

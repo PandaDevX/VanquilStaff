@@ -29,7 +29,7 @@ public class StaffGui {
                 continue;
             }
             String name = fileUtil.get().getBoolean("Staffs." + staff.get(i) + ".show_realname") ? staff.get(i) : player.getDisplayName();
-            ItemStack head = Utility.getSkull(Bukkit.getOfflinePlayer(staff.get(i)), fileUtil.get().getString("Staffs." + staff + ".prefix") + name);
+            ItemStack head = Utility.getSkull(Bukkit.getOfflinePlayer(staff.get(i)), fileUtil.get().getString("Staffs." + staff.get(i) + ".prefix") + name);
             builder.setItem(i + 1, head);
 
             staff = null;

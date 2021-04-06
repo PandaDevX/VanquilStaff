@@ -37,7 +37,8 @@ public class FilterAlertCommand implements CommandExecutor {
         if(Storage.filterAlerts.contains(player.getUniqueId().toString())) {
 
             // disable alerts
-            player.sendMessage("&cDisabled filter alerts");
+            Storage.filterAlerts.remove(player.getUniqueId().toString());
+            player.sendMessage(Utility.colorize("&cDisabled filter alerts"));
             return true;
         }
 
@@ -45,7 +46,7 @@ public class FilterAlertCommand implements CommandExecutor {
         Storage.filterAlerts.add(player.getUniqueId().toString());
 
         // send message
-        player.sendMessage("&aEnabled filter alerts");
+        player.sendMessage(Utility.colorize("&aEnabled filter alerts"));
         return false;
     }
 }

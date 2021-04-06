@@ -51,6 +51,7 @@ public class CPSCommand implements CommandExecutor {
             public void run() {
                 Storage.cpsListeners.remove(player.getUniqueId().toString());
                 Storage.cpsTaskID.remove(player.getUniqueId().toString());
+                player.sendMessage(Utility.colorize("&c&lCPS>> &fFinished listening"));
             }
         };
         runnable.runTaskLater(Staff.getInstance(), (60 * 20));

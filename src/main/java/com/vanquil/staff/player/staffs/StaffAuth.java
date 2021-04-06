@@ -72,6 +72,12 @@ public class StaffAuth implements Listener {
         // play sound
         ((Player)e.getWhoClicked()).playSound(e.getWhoClicked().getLocation(), Sound.ENTITY_CHICKEN_EGG, 5, 5);
 
+        if(e.getCurrentItem().getItemMeta().getDisplayName().equals(" ")
+        || e.getCurrentItem().getItemMeta().getDisplayName().endsWith("Wrong Password")) {
+            e.setCancelled(true);
+            return;
+        }
+
         if(e.getCurrentItem().getItemMeta().getDisplayName().endsWith("Register")) {
             e.setCancelled(true);
 

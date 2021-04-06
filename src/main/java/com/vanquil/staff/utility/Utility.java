@@ -301,17 +301,6 @@ public final class Utility {
 
         // check if the player is already vanished
         if(Storage.vanishedPlayers.contains(player.getUniqueId().toString())) {
-            if(Staff.getInstance().getConfig().getBoolean("Staff Vanish.invisibility")) {
-                player.removePotionEffect(PotionEffectType.INVISIBILITY);
-            }
-            Storage.vanishedPlayers.remove(player.getUniqueId().toString());
-            for(Player online : Bukkit.getOnlinePlayers()) {
-                if(online.hasPermission("staff.vanish")) {
-                    continue;
-                }
-                online.showPlayer(Staff.getInstance(), player);
-            }
-            player.sendMessage(Utility.colorize(Staff.getInstance().getConfig().getString("Staff Vanish.show-message")));
             return;
         }
 
@@ -326,7 +315,6 @@ public final class Utility {
             }
             online.hidePlayer(Staff.getInstance(), player);
         }
-        player.sendMessage(Utility.colorize(Staff.getInstance().getConfig().getString("Staff Vanish.hide-message")));
     }
 
     public static void showWrongInfo(Inventory inventory, int slot) {

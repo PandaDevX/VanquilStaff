@@ -27,7 +27,10 @@ public class StaffAuth implements Listener {
     public void onStaffJoin(PlayerJoinEvent e) {
         if(!Utility.getStaffNames().contains(e.getPlayer().getName())) return;
 
+        PinDatabase pinDatabase = new PinDatabase(e.getPlayer());
+        if(pinDatabase.isLoggedIn()) return;
         Utility.auth(e.getPlayer());
+        pinDatabase = null;
     }
 
     @EventHandler
@@ -210,11 +213,4 @@ public class StaffAuth implements Listener {
         pinDatabase = null;
     }
 
-    @EventHandler
-    public void onLeave(PlayerQuitEvent e) {
-        if(Utility.getStaffNames().contains(e.getPlayer().getName())) {
-            PinDatabase pinDatabase = new PinDatabase(e.getPlayer());
-            pinDatabase.logout();
-        }
-    }
 }

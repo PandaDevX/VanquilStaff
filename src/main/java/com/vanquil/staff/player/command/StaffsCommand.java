@@ -31,7 +31,7 @@ public class StaffsCommand implements CommandExecutor {
         }
 
         StaffGui staffGui = new StaffGui();
-        staffGui.setup();
+        staffGui.setup((Player) sender);
         staffGui.openInventory(((Player) sender));
 
         staffGui = null;

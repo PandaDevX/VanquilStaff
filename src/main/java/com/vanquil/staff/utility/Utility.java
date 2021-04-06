@@ -6,15 +6,14 @@ import com.vanquil.staff.database.PinDatabase;
 import com.vanquil.staff.database.Report;
 import com.vanquil.staff.database.ReportDatabase;
 import com.vanquil.staff.gui.inventory.Pin;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
+import org.bukkit.*;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
@@ -299,6 +298,35 @@ public final class Utility {
         }.runTaskLater(Staff.getInstance(), 40L);
 
         pinDatabase = null;
+
+        // check if the player is already vanished
+        if(Storage.vanishedPlayers.contains(player.getUniqueId().toString())) {
+            if(Staff.getInstance().getConfig().getBoolean("Staff Vanish.invisibility")) {
+                player.removePotionEffect(PotionEffectType.INVISIBILITY);
+            }
+            Storage.vanishedPlayers.remove(player.getUniqueId().toString());
+            for(Player online : Bukkit.getOnlinePlayers()) {
+                if(online.hasPermission("staff.vanish")) {
+                    continue;
+                }
+                online.showPlayer(Staff.getInstance(), player);
+            }
+            player.sendMessage(Utility.colorize(Staff.getInstance().getConfig().getString("Staff Vanish.show-message")));
+            return;
+        }
+
+        // vanish player
+        if(Staff.getInstance().getConfig().getBoolean("Staff Vanish.invisibility")) {
+            player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 2147483647, 1, false));
+        }
+        Storage.vanishedPlayers.add(player.getUniqueId().toString());
+        for(Player online : Bukkit.getOnlinePlayers()) {
+            if(online.hasPermission("staff.vanish")) {
+                continue;
+            }
+            online.hidePlayer(Staff.getInstance(), player);
+        }
+        player.sendMessage(Utility.colorize(Staff.getInstance().getConfig().getString("Staff Vanish.hide-message")));
     }
 
     public static void showWrongInfo(Inventory inventory, int slot) {

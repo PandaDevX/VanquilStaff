@@ -87,10 +87,11 @@ public final class Staff extends JavaPlugin {
         // connect
         try {
             DatabaseManager.connect(getConfig());
+            getLogger().info("Successfully connected to database");
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }
-        getLogger().info("Successfully connected to database");
+
 
 
         // cps counter
@@ -100,8 +101,11 @@ public final class Staff extends JavaPlugin {
         // auth staffs
         for(Player player : Bukkit.getOnlinePlayers()) {
             if(Utility.getStaffNames().contains(player.getName())) {
-                Utility.auth(player);
-                continue;
+                PinDatabase pinDatabase = new PinDatabase(player);
+                if(!pinDatabase.isLoggedIn()) {
+                    Utility.auth(player);
+                }
+                pinDatabase = null;
             }
         }
     }
@@ -111,20 +115,6 @@ public final class Staff extends JavaPlugin {
 
         //logger
         getLogger().info("Has been disabled");
-
-        for(Player player : Bukkit.getOnlinePlayers()) {
-
-            // if staff
-            // logout
-            if(Utility.getStaffNames().contains(player.getName())) {
-                PinDatabase pinDatabase = new PinDatabase(player);
-                if(pinDatabase.isLoggedIn()) {
-                    pinDatabase.logout();
-                }
-                // player logged out
-                pinDatabase=null;
-            }
-        }
 
         // close all storages
         Storage.staffAttempt.clear();

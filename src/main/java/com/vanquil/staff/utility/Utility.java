@@ -16,6 +16,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -250,21 +251,22 @@ public final class Utility {
 
     public static void createReport(OfflinePlayer player, String report, OfflinePlayer reporter) {
         ReportDatabase reportDatabase = new ReportDatabase();
-        reportDatabase.save(player, report, reporter);
+        reportDatabase.save(new Report(player, report, reporter, null, true, new SimpleDateFormat("MMMMM dd yyyy hh:mm a").format(new Date(System.currentTimeMillis()))));
         reportDatabase = null;
     }
 
-    public static void createReport(OfflinePlayer player, String report, OfflinePlayer reporter, Location location) {
+    public static void createReport(OfflinePlayer player, String report, OfflinePlayer reporter, String url) {
         ReportDatabase reportDatabase = new ReportDatabase();
-        reportDatabase.save(player, report, reporter, location);
+        reportDatabase.save(new Report(player, report, reporter, url, true, new SimpleDateFormat("MMMMM dd yyyy hh:mm a").format(new Date(System.currentTimeMillis()))));
         reportDatabase = null;
     }
 
-    public static void createReport(OfflinePlayer player, String report, OfflinePlayer reporter, Location location, String URL) {
+    public static void closeReport(OfflinePlayer player, String report) {
         ReportDatabase reportDatabase = new ReportDatabase();
-        reportDatabase.save(player, report, reporter, location, URL);
+        reportDatabase.close(player, report);
         reportDatabase = null;
     }
+
 
     public static void changeState(OfflinePlayer player, String report) {
         ReportDatabase reportDatabase = new ReportDatabase();

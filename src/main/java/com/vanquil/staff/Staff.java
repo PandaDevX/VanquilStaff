@@ -131,6 +131,8 @@ public final class Staff extends JavaPlugin {
         Storage.vanishedPlayers.clear();
         Storage.frozenPlayers.clear();
         Storage.filterAlerts.clear();
+        Storage.playerSelection.clear();
+        getLogger().info("All storage are closed");
 
         DatabaseManager.disconnect();
     }

@@ -10,34 +10,24 @@ public class Report {
     private OfflinePlayer player;
     private String report;
     private OfflinePlayer reporter;
-    private Location location = null;
     private String url = null;
-    public Report(OfflinePlayer player, String report, OfflinePlayer reporter, Location location, String url) {
-        this.player = player;
-        this.report = report;
-        this.reporter = reporter;
-        this.location = location;
-        this.url = url;
-    }
-
-    public Report(OfflinePlayer player, String report, OfflinePlayer reporter) {
-        this.player = player;
-        this.report = report;
-        this.reporter = reporter;
-    }
-
-    public Report(OfflinePlayer player, String report, OfflinePlayer reporter, Location location) {
-        this.player = player;
-        this.report = report;
-        this.reporter = reporter;
-        this.location = location;
-    }
-
-    public Report(OfflinePlayer player, String report, OfflinePlayer reporter, String url) {
+    private boolean open;
+    private String date;
+    public Report(OfflinePlayer player, String report, OfflinePlayer reporter, String url, boolean open, String date) {
         this.player = player;
         this.report = report;
         this.reporter = reporter;
         this.url = url;
+        this.open = open;
+        this.date = date;
+    }
+
+    public Report(OfflinePlayer player, String report, OfflinePlayer reporter, boolean open, String date) {
+        this.player = player;
+        this.report = report;
+        this.reporter = reporter;
+        this.open = open;
+        this.date = date;
     }
 
     public ItemStack getPlayerHead() {
@@ -52,15 +42,23 @@ public class Report {
         return report;
     }
 
-    public Location getLocation() {
-        return location;
-    }
-
     public String getUrl() {
         return url;
     }
 
+    public String getDate() {
+        return date;
+    }
+
     public OfflinePlayer getReportedPlayer() {
         return this.player;
+    }
+
+    public OfflinePlayer getReporter() {
+        return reporter;
+    }
+
+    public boolean isOpen() {
+        return open;
     }
 }

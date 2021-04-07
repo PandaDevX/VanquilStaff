@@ -43,3 +43,17 @@ Restore Inventory:
 # Clicks Per Second
 CPS:
   left_click_only: true
+
+
+###
+##
+# Random Teleport
+Random Teleport:
+
+   biome_blacklist:
+      - 'ocean'
+      - 'river'
+      - 'deep ocean'
+
+   block_blacklist:
+      - 'cactus'

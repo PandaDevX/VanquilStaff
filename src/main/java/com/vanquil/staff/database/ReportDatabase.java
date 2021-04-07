@@ -6,6 +6,8 @@ import org.bukkit.OfflinePlayer;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -15,7 +17,7 @@ public class ReportDatabase {
     public ReportDatabase() {
         try {
             PreparedStatement ps = DatabaseManager.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS reports "
-                    + "(UUID VARCHAR(100), REPORT VARCHAR(100), REPORTER VARCHAR(100), LOCATION VARCHAR(100), URL VARCHAR(100), OPEN BOOLEAN(100))");
+                    + "(UUID VARCHAR(100), REPORT VARCHAR(100), REPORTER VARCHAR(100), URL VARCHAR(100), OPEN BOOLEAN)");
             ps.executeUpdate();
             ps = null;
         }catch (SQLException e) {
@@ -44,7 +46,7 @@ public class ReportDatabase {
                 String report = resultSet.getString("REPORT");
                 OfflinePlayer reporter = Bukkit.getOfflinePlayer(UUID.fromString(resultSet.getString("REPORTER")));
                 String url = resultSet.getString("URL");
-                Report reportObject = new Report(player, report, reporter, location, url);
+                Report reportObject = new Report(player, report, reporter, url, resultSet.getBoolean("OPEN"), resultSet.getString("DATE"));
                 reports.add(reportObject);
                 reportObject = null;
                 url = null;
@@ -66,29 +68,17 @@ public class ReportDatabase {
             PreparedStatement ps = prepareStatement("SELECT * FROM reports");
             ResultSet resultSet = ps.executeQuery();
             while(resultSet.next()) {
-                Location location = null;
-                if(resultSet.getString("LOCATION") != null) {
-                    String[] loc = resultSet.getString("LOCATION").split(",");
-                    location = new Location(Bukkit.getWorld(loc[0]),
-                            Double.parseDouble(loc[1]),
-                            Double.parseDouble(loc[2]),
-                            Double.parseDouble(loc[3]),
-                            Float.parseFloat(loc[4]),
-                            Float.parseFloat(loc[5]));
-                    loc = null;
-                }
                 OfflinePlayer player = Bukkit.getOfflinePlayer(UUID.fromString(resultSet.getString("UUID")));
                 String report = resultSet.getString("REPORT");
                 OfflinePlayer reporter = Bukkit.getOfflinePlayer(UUID.fromString(resultSet.getString("REPORTER")));
                 String url = resultSet.getString("URL");
-                Report reportObject = new Report(player, report, reporter, location, url);
+                Report reportObject = new Report(player, report, reporter, url, resultSet.getBoolean("OPEN"), resultSet.getString("DATE"));
                 reports.add(reportObject);
                 player = null;
                 reportObject = null;
                 url = null;
                 reporter = null;
                 report = null;
-                location = null;
             }
             resultSet = null;
             ps = null;
@@ -98,54 +88,16 @@ public class ReportDatabase {
         return reports;
     }
 
-    public void save(OfflinePlayer player, String report, OfflinePlayer reporter) {
+    public void save(Report report) {
         try {
             PreparedStatement ps = prepareStatement("INSERT reports"
-            + " (UUID,REPORT,REPORTER,OPEN) VALUES (?,?,?,?)");
-            ps.setString(1, player.getUniqueId().toString());
-            ps.setString(2, report);
-            ps.setString(3, reporter.getUniqueId().toString());
-            ps.setBoolean(4, true);
-            ps.executeUpdate();
-        }catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void save(OfflinePlayer player, String report, OfflinePlayer reporter, Location location) {
-        try {
-            PreparedStatement ps = prepareStatement("INSERT reports"
-                    + " (UUID,REPORT,REPORTER,LOCATION,OPEN) VALUES (?,?,?,?,?)");
-            ps.setString(1, player.getUniqueId().toString());
-            ps.setString(2, report);
-            ps.setString(3, reporter.getUniqueId().toString());
-            ps.setString(4, location.getWorld().getName() + ","
-             + location.getX() + ","
-             + location.getY() + ","
-             + location.getZ() + ","
-             + location.getYaw() + ","
-             + location.getPitch());
-            ps.setBoolean(5, true);
-            ps.executeUpdate();
-        }catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void save(OfflinePlayer player, String report, OfflinePlayer reporter, Location location, String url) {
-        try {
-            PreparedStatement ps = prepareStatement("INSERT reports"
-                    + " (UUID,REPORT,REPORTER,LOCATION,URL,OPEN) VALUES (?,?,?,?,?,?)");
-            ps.setString(1, player.getUniqueId().toString());
-            ps.setString(2, report);
-            ps.setString(3, reporter.getUniqueId().toString());
-            ps.setString(4, location.getWorld().getName() + ","
-                    + location.getX() + ","
-                    + location.getY() + ","
-                    + location.getZ() + ","
-                    + location.getYaw() + ","
-                    + location.getPitch());
-            ps.setString(5, url.startsWith("https://") ? url : "https://" + url);
+                    + " (UUID,REPORT,REPORTER,URL,OPEN,DATE) VALUES (?,?,?,?,?,?)");
+            ps.setString(1, report.getReportedPlayer().getUniqueId().toString());
+            ps.setString(2, report.getReport());
+            ps.setString(3, report.getReporter().getUniqueId().toString());
+            ps.setString(4, report.getUrl());
+            ps.setBoolean(5, report.isOpen());
+            ps.setString(6,  report.getDate());
             ps.executeUpdate();
         }catch (SQLException e) {
             e.printStackTrace();
@@ -167,10 +119,11 @@ public class ReportDatabase {
 
     public void close(OfflinePlayer player, String report) {
         try {
-            PreparedStatement ps = prepareStatement("UPDATE reports SET OPEN=? WHERE UUID=? AND REPORT=?");
+            PreparedStatement ps = prepareStatement("UPDATE reports SET OPEN=? AND DATE=? WHERE UUID=? AND REPORT=?");
             ps.setBoolean(1, false);
-            ps.setString(2, player.getUniqueId().toString());
-            ps.setString(3, report);
+            ps.setString(2, new SimpleDateFormat("MMMMM dd yyyy hh:mm a").format(new Date(System.currentTimeMillis())));
+            ps.setString(3, player.getUniqueId().toString());
+            ps.setString(4, report);
         } catch (SQLException e) {
             e.printStackTrace();
         }

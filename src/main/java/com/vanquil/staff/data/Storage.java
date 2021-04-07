@@ -25,5 +25,6 @@ public final class Storage {
     public static HashMap<String, ItemStack[]> staffInventory = new HashMap<>();
     public static HashMap<String, Integer> playerIndexPin = new HashMap<>();
     public static HashMap<String, Integer> staffAttempt = new HashMap<>();
+    public static HashMap<String, String> playerSelection = new HashMap<>();
 
 }

@@ -1,8 +1,6 @@
 package com.vanquil.staff.database;
 
-import com.vanquil.staff.Staff;
 import org.bukkit.configuration.file.FileConfiguration;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;

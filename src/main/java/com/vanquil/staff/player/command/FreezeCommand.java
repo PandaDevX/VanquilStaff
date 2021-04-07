@@ -45,7 +45,7 @@ public class FreezeCommand implements CommandExecutor {
                 Storage.frozenPlayers.remove(player.getUniqueId().toString());
 
                 // send alert
-                player.sendMessage(Utility.colorize("&aYou are now able to move"));
+                player.sendTitle(Utility.colorize("&6&lFreeze"), Utility.colorize("&aYou are now able to move"), 10, 70, 20);
                 return true;
             }
 
@@ -53,7 +53,7 @@ public class FreezeCommand implements CommandExecutor {
             Storage.frozenPlayers.add(player.getUniqueId().toString());
 
             // send alert
-            player.sendMessage(Utility.colorize("&aYou are no longer able to move"));
+            player.sendTitle(Utility.colorize("&6&lFreeze"), Utility.colorize("&aYou are no longer able to move"), 10, 70, 20);
 
             return true;
         }
@@ -77,7 +77,7 @@ public class FreezeCommand implements CommandExecutor {
                     Storage.frozenPlayers.remove(online.getUniqueId().toString());
 
                     // send alert
-                    online.sendMessage(Utility.colorize("&aYou are now able to move"));
+                    online.sendTitle(Utility.colorize("&6&lFreeze"), Utility.colorize("&aYou are now able to move"), 10, 70, 20);
                     return true;
                 }
 
@@ -85,7 +85,7 @@ public class FreezeCommand implements CommandExecutor {
                 Storage.frozenPlayers.add(online.getUniqueId().toString());
 
                 // send alert
-                online.sendMessage(Utility.colorize("&aYou are no longer able to move"));
+                online.sendTitle(Utility.colorize("&6&lFreeze"), Utility.colorize("&aYou are no longer able to move"), 10, 70, 20);
 
             }
             return true;
@@ -113,7 +113,7 @@ public class FreezeCommand implements CommandExecutor {
             Storage.frozenPlayers.remove(target.getUniqueId().toString());
 
             // send alert
-            sender.sendMessage(Utility.colorize("&aYou are now able to move"));
+            target.sendTitle(Utility.colorize("&6&lFreeze"), Utility.colorize("&aYou are now able to move"), 10, 70, 20);
             return true;
         }
 
@@ -121,7 +121,7 @@ public class FreezeCommand implements CommandExecutor {
         Storage.frozenPlayers.add(target.getUniqueId().toString());
 
         // send alert
-        target.sendMessage(Utility.colorize("&aYou are no longer able to move"));
+        target.sendTitle(Utility.colorize("&6&lFreeze"), Utility.colorize("&aYou are no longer able to move"), 10, 70, 20);
 
         return false;
     }

@@ -6,6 +6,7 @@ import com.vanquil.staff.database.PinDatabase;
 import com.vanquil.staff.database.Report;
 import com.vanquil.staff.database.ReportDatabase;
 import com.vanquil.staff.gui.inventory.Pin;
+import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -364,6 +365,14 @@ public final class Utility {
     }
 
     public static void sendActionBar(Player player, String message) {
+        try {
+            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
+        }catch(NoSuchMethodError e) {
+            Bukkit.getScheduler().runTaskAsynchronously(Staff.getInstance(), () -> sendActionBarTask(player, message));
+        }
+    }
+
+    public static void sendActionBarTask(Player player, String message) {
             if (!player.isOnline()) {
                 return; // Player may have logged out
             }
@@ -416,6 +425,71 @@ public final class Utility {
         return getNMSVersion().equalsIgnoreCase("v1_8_R1") || getNMSVersion().startsWith("v1_7");
     }
 
+    public static void sendTitleRaw(Player player, Integer fadeIn, Integer stay, Integer fadeOut, String title, String subtitle) {
+
+        try {
+            Object e;
+            Object chatTitle;
+            Object chatSubtitle;
+            Constructor subtitleConstructor;
+            Object titlePacket;
+            Object subtitlePacket;
+
+            if (title != null) {
+                title = ChatColor.translateAlternateColorCodes('&', title);
+                title = title.replaceAll("%player%", player.getDisplayName());
+                // Times packets
+                e = getNMSClass("PacketPlayOutTitle").getDeclaredClasses()[0].getField("TIMES").get((Object) null);
+                chatTitle = getNMSClass("IChatBaseComponent").getDeclaredClasses()[0].getMethod("a", new Class[]{String.class}).invoke((Object) null, new Object[]{"{\"text\":\"" + title + "\"}"});
+                subtitleConstructor = getNMSClass("PacketPlayOutTitle").getConstructor(new Class[]{getNMSClass("PacketPlayOutTitle").getDeclaredClasses()[0], getNMSClass("IChatBaseComponent"), Integer.TYPE, Integer.TYPE, Integer.TYPE});
+                titlePacket = subtitleConstructor.newInstance(new Object[]{e, chatTitle, fadeIn, stay, fadeOut});
+                sendPacket(player, titlePacket);
+
+                e = getNMSClass("PacketPlayOutTitle").getDeclaredClasses()[0].getField("TITLE").get((Object) null);
+                chatTitle = getNMSClass("IChatBaseComponent").getDeclaredClasses()[0].getMethod("a", new Class[]{String.class}).invoke((Object) null, new Object[]{"{\"text\":\"" + title + "\"}"});
+                subtitleConstructor = getNMSClass("PacketPlayOutTitle").getConstructor(new Class[]{getNMSClass("PacketPlayOutTitle").getDeclaredClasses()[0], getNMSClass("IChatBaseComponent")});
+                titlePacket = subtitleConstructor.newInstance(new Object[]{e, chatTitle});
+                sendPacket(player, titlePacket);
+            }
+
+            if (subtitle != null) {
+                subtitle = ChatColor.translateAlternateColorCodes('&', subtitle);
+                subtitle = subtitle.replaceAll("%player%", player.getDisplayName());
+                // Times packets
+                e = getNMSClass("PacketPlayOutTitle").getDeclaredClasses()[0].getField("TIMES").get((Object) null);
+                chatSubtitle = getNMSClass("IChatBaseComponent").getDeclaredClasses()[0].getMethod("a", new Class[]{String.class}).invoke((Object) null, new Object[]{"{\"text\":\"" + title + "\"}"});
+                subtitleConstructor = getNMSClass("PacketPlayOutTitle").getConstructor(new Class[]{getNMSClass("PacketPlayOutTitle").getDeclaredClasses()[0], getNMSClass("IChatBaseComponent"), Integer.TYPE, Integer.TYPE, Integer.TYPE});
+                subtitlePacket = subtitleConstructor.newInstance(new Object[]{e, chatSubtitle, fadeIn, stay, fadeOut});
+                sendPacket(player, subtitlePacket);
+
+                e = getNMSClass("PacketPlayOutTitle").getDeclaredClasses()[0].getField("SUBTITLE").get((Object) null);
+                chatSubtitle = getNMSClass("IChatBaseComponent").getDeclaredClasses()[0].getMethod("a", new Class[]{String.class}).invoke((Object) null, new Object[]{"{\"text\":\"" + subtitle + "\"}"});
+                subtitleConstructor = getNMSClass("PacketPlayOutTitle").getConstructor(new Class[]{getNMSClass("PacketPlayOutTitle").getDeclaredClasses()[0], getNMSClass("IChatBaseComponent"), Integer.TYPE, Integer.TYPE, Integer.TYPE});
+                subtitlePacket = subtitleConstructor.newInstance(new Object[]{e, chatSubtitle, fadeIn, stay, fadeOut});
+                sendPacket(player, subtitlePacket);
+            }
+        } catch (Exception var11) {
+            var11.printStackTrace();
+        }
+    }
+
+
+    public static void sendTitleTask(Player player, String title, String subTitle, int x, int y, int z) {
+        try {
+            player.sendTitle(colorize(title), colorize(subTitle), x, y, z);
+        }catch (NoSuchMethodError e) {
+            sendTitleRaw(player, x, y, z, Utility.colorize(title), Utility.colorize(subTitle));
+        }
+    }
+
+    public static void sendTitle(Player player, String title, String subTitle, int x, int y, int z) {
+        Bukkit.getScheduler().runTaskAsynchronously(Staff.getInstance(), () -> sendTitleTask(player, title, subTitle, x,  y, z));
+    }
+
+    public static void sendTitle(Player player, String title, String subTitle) {
+        Bukkit.getScheduler().runTaskAsynchronously(Staff.getInstance(), () -> sendTitleTask(player, title, subTitle, 10,  70, 20));
+    }
+
     private static String getNMSVersion() {
         return Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
     }
@@ -434,17 +508,14 @@ public final class Utility {
         }
     }
 
-    private static Class<?> getNMSClass(String name)
-    {
-        try
-        {
-            return Class.forName("net.minecraft.server" + Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3] + "." + name);
+    public static Class<?> getNMSClass(String name) {
+        String version = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
+        try {
+            return Class.forName("net.minecraft.server." + version + "." + name);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            return null;
         }
-        catch(ClassNotFoundException ex)
-        {
-            //Do something
-        }
-        return null;
     }
 
     public static void followPlayer(Player stalker, Player suspect) {
@@ -455,16 +526,16 @@ public final class Utility {
             return;
         }
         if (suspect.equals(stalker)) {
-            stalker.sendMessage("&6&lFollow Tool &cYou can't follow yourself");
+            sendTitle(stalker, "&6&lFollow Tool", "&cYou can't follow yourself");
             return;
         }
         if (FollowRoster.getInstance().isSuspect(stalker.getName())) {
-            stalker.sendMessage("&6&lFollow Tool &cYou can't follow someone while being followed");
+            sendTitle(stalker, "&6&lFollow Tool", "&cYou can't follow someone while being followed");
             return;
         }
 
         FollowRoster.getInstance().follow(stalker, suspect, distance);
-        stalker.sendMessage("&6&lFollow Tool &fYou are now following player &6" + suspect.getName());
+        sendTitle(stalker, "&6&lFollow Tool", "&aYou are now following &f" + suspect.getName());
         stalker.sendMessage(Utility.colorize("&a&lVanquil Staff &8>> &fType &ccancel &fto cancel"));
     }
 

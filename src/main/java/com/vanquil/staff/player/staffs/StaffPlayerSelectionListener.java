@@ -90,7 +90,7 @@ public class StaffPlayerSelectionListener implements Listener {
                     Storage.frozenPlayers.remove(target.getUniqueId().toString());
 
                     // send alert
-                    target.sendMessage(Utility.colorize("&6&lFreeze &aYou are now able to move"));
+                    Utility.sendTitle(target, "&6&lFreeze Tool", "&aYou are now able to move");
 
                     player.sendMessage(Utility.colorize("&a&lVanquil Staff &8>> &7Successfully removed frozen spell to that player"));
                     break;
@@ -100,7 +100,7 @@ public class StaffPlayerSelectionListener implements Listener {
                 Storage.frozenPlayers.add(target.getUniqueId().toString());
 
                 // send alert
-                target.sendMessage(Utility.colorize("&6&lFreeze &aYou are no longer able to move"));
+                Utility.sendTitle(target, "&6&lFreeze Tool", "&aYou are no longer able to move");
 
                 player.sendMessage(Utility.colorize("&a&lVanquil Staff &8>> &7Successfully added frozen spell to that player"));
                 break;

@@ -40,17 +40,25 @@ public class StaffFollowListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOW)
     public void onPlayerMove(PlayerMoveEvent e) {
-        onMovement(e);
+        onFollowMoveMent(e);
     }
 
     @EventHandler(priority = EventPriority.LOW)
     public void onPlayerTeleport(PlayerTeleportEvent e) {
-        onMovement(e);
+        onFollowMoveMent(e);
     }
 
     @EventHandler(priority = EventPriority.LOW)
     public void onPlayerLogout(PlayerQuitEvent e) {
         FollowRoster.getInstance().remove(e.getPlayer());
+    }
+
+    private void onFollowMoveMent(PlayerMoveEvent e) {
+        if(e.isAsynchronous()) {
+            Bukkit.getScheduler().scheduleSyncDelayedTask(Staff.getInstance(), () -> onMovement(e));
+        } else {
+            ((Runnable) () -> onMovement(e)).run();
+        }
     }
 
     private void onMovement(PlayerMoveEvent e) {

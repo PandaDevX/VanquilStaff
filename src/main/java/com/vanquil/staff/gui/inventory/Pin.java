@@ -77,10 +77,8 @@ public class Pin {
         eraser.setName("&c&lEraser");
         eraser.setLore("", "&5CLICK &6To erase", "&5SHIFT CLICK &6To reset");
 
-        ItemBuilder placeholder = new ItemBuilder(Material.valueOf(Staff.getInstance().getConfig().getString("Auth Pin.placeholder")
-        .replace(" ", "_").toUpperCase()));
         // place placeholders
-        builder.placePlaceHolders(placeholder);
+        builder.placePlaceHolders(1, 36);
 
         // set items
         builder.setItem(32, zero);
@@ -116,7 +114,6 @@ public class Pin {
         eight = null;
         nine = null;
         login = null;
-        placeholder = null;
         builder = null;
     }
 

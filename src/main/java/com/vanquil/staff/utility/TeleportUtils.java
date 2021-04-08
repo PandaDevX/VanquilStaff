@@ -14,7 +14,12 @@ public final class TeleportUtils {
 
     static {
         UNSAFE_MATERIALS.add(Material.LAVA);
-        UNSAFE_MATERIALS.add(Material.LEGACY_STATIONARY_LAVA);
+        for(Material material : Material.values()) {
+            if(material.name().endsWith("STATIONARY_LAVA")) {
+                UNSAFE_MATERIALS.add(material);
+                break;
+            }
+        }
         UNSAFE_MATERIALS.add(Material.FIRE);
         List<Vector3D> pos = new ArrayList<>();
         for (int x = -3; x <= 3; x++) {

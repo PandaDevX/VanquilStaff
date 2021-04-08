@@ -12,9 +12,9 @@ public class Examine {
     private Inventory inventory = null;
 
     public void setup(String name) {
-        InventoryBuilder builder = new InventoryBuilder("&4Examine &8( &c" + name + " &8)", InventoryType.HOPPER);
+        InventoryBuilder builder = new InventoryBuilder("&8( &c" + name + " &8)", InventoryType.HOPPER);
 
-        builder.placePlaceHolders(1, 5, Material.BLACK_STAINED_GLASS_PANE);
+        builder.placePlaceHolders(1, 5);
 
         ItemBuilder chest = new ItemBuilder(Material.CHEST);
 

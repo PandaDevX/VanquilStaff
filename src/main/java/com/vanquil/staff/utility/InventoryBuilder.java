@@ -1,13 +1,17 @@
 package com.vanquil.staff.utility;
 
 import org.bukkit.Bukkit;
+import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.Dye;
 
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class InventoryBuilder {
 
@@ -42,6 +46,32 @@ public class InventoryBuilder {
             end = inventory.getSize();
         }
         ItemBuilder builder = new ItemBuilder(type);
+        builder.setName(" ");
+        for (int i = start; i < end; i++) {
+            inventory.setItem(i, builder.createPlaceHolder());
+        }
+    }
+
+    public void placePlaceHolders(int start, int end) {
+        boolean isNewVersion = Arrays.stream(Material.values())
+                .map(Material::name)
+                .collect(Collectors.toList())
+                .contains("BLACK_STAINED_GLASS_PANE");
+
+        Material type = Material.matchMaterial(isNewVersion ? "BLACK_STAINED_GLASS_PANE" : "STAINED_GLASS_PANE");
+
+        ItemStack item = new ItemStack(type);
+        if(!isNewVersion) {
+            item = new ItemStack(type, 1, DyeColor.BLACK.getDyeData());
+        }
+        start -= 1;
+        if(start <= 0) {
+            start = 0;
+        }
+        if(end >= inventory.getSize()) {
+            end = inventory.getSize();
+        }
+        ItemBuilder builder = new ItemBuilder(item);
         builder.setName(" ");
         for (int i = start; i < end; i++) {
             inventory.setItem(i, builder.createPlaceHolder());

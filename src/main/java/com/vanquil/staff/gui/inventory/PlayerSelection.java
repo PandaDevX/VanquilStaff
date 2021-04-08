@@ -32,13 +32,13 @@ public class PlayerSelection {
 
         for(int i = 0; i < availablePlayers.size(); i++) {
 
-            ItemBuilder itemBuilder = new ItemBuilder(Utility.getSkull(availablePlayers.get(i), "&c" + availablePlayers.get(i).getDisplayName()));
+            ItemBuilder itemBuilder = new ItemBuilder(Utility.getSkull(availablePlayers.get(i), "&c" + availablePlayers.get(i).getName()));
             builder.setItem(i + 1, itemBuilder);
 
             itemBuilder = null;
         }
 
-        builder.placePlaceHolders(28, 36, Material.BLACK_STAINED_GLASS_PANE);
+        builder.placePlaceHolders(28, 36);
 
         ItemBuilder prev = new ItemBuilder(Material.MAP);
         prev.setName("&3Prev");

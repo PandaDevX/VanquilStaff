@@ -100,7 +100,7 @@ public final class Staff extends JavaPlugin {
             DatabaseManager.connect(getConfig());
             getLogger().info("Successfully connected to database");
         } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
+            // ignore
         }
 
 

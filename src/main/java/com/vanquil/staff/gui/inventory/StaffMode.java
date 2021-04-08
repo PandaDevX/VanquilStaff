@@ -23,13 +23,13 @@ public class StaffMode {
         ItemBuilder freeze = new ItemBuilder(Material.ICE);
         freeze.setName("&6Freeze Tool");
 
-        ItemBuilder follow = new ItemBuilder(Material.BLACK_BANNER);
+        ItemBuilder follow = new ItemBuilder(Material.GOLD_INGOT);
         follow.setName("&6Follow Tool");
 
-        ItemBuilder push = new ItemBuilder(Material.CREEPER_HEAD);
+        ItemBuilder push = new ItemBuilder(Material.TNT);
         push.setName("&6Push Forward");
 
-        ItemBuilder staffs = new ItemBuilder(Material.BELL);
+        ItemBuilder staffs = new ItemBuilder(Material.DISPENSER);
         staffs.setName("&6Staffs");
 
         builder.setItem(1, randomTP);

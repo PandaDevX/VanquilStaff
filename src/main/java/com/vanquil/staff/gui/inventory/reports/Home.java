@@ -16,9 +16,9 @@ public class Home {
 
         InventoryBuilder builder = new InventoryBuilder("&4Main Menu &8( &c" + name + " &8)", InventoryType.HOPPER);
 
-        builder.placePlaceHolders(1, 5, Material.BLACK_STAINED_GLASS_PANE);
+        builder.placePlaceHolders(1, 5);
 
-        ItemBuilder open = new ItemBuilder(Material.SPAWNER);
+        ItemBuilder open = new ItemBuilder(Material.BEDROCK);
         open.setName("&6Open Reports");
 
         ItemBuilder close = new ItemBuilder(Material.LEATHER_CHESTPLATE);

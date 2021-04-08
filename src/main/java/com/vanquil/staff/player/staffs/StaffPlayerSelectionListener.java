@@ -60,9 +60,6 @@ public class StaffPlayerSelectionListener implements Listener {
 
         action(Storage.staffTool.get(clickEvent.getPlayer().getUniqueId().toString()), clickEvent.getPlayer());
 
-        Storage.staffTool.remove(clickEvent.getPlayer().getUniqueId().toString());
-        Storage.playerInventory.remove(clickEvent.getPlayer().getUniqueId().toString());
-
         playerName = null;
         clickEvent = null;
     }
@@ -93,7 +90,7 @@ public class StaffPlayerSelectionListener implements Listener {
                     Storage.frozenPlayers.remove(target.getUniqueId().toString());
 
                     // send alert
-                    target.sendTitle(Utility.colorize("&6&lFreeze"), Utility.colorize("&aYou are now able to move"), 10, 70, 20);
+                    target.sendMessage(Utility.colorize("&6&lFreeze &aYou are now able to move"));
 
                     player.sendMessage(Utility.colorize("&a&lVanquil Staff &8>> &7Successfully removed frozen spell to that player"));
                     break;
@@ -103,7 +100,7 @@ public class StaffPlayerSelectionListener implements Listener {
                 Storage.frozenPlayers.add(target.getUniqueId().toString());
 
                 // send alert
-                target.sendTitle(Utility.colorize("&6&lFreeze"), Utility.colorize("&aYou are no longer able to move"), 10, 70, 20);
+                target.sendMessage(Utility.colorize("&6&lFreeze &aYou are no longer able to move"));
 
                 player.sendMessage(Utility.colorize("&a&lVanquil Staff &8>> &7Successfully added frozen spell to that player"));
                 break;
@@ -121,5 +118,7 @@ public class StaffPlayerSelectionListener implements Listener {
             default:
                 break;
         }
+        Storage.staffTool.remove(player.getUniqueId().toString());
+        Storage.playerInventory.remove(player.getUniqueId().toString());
     }
 }

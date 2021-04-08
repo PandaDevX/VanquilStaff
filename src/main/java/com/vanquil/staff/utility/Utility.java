@@ -10,9 +10,12 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
+import net.minecraft.server.v1_16_R3.IChatBaseComponent;
+import net.minecraft.server.v1_16_R3.PacketPlayOutTitle;
+import net.minecraft.server.v1_16_R3.PlayerConnection;
 import org.bukkit.*;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.craftbukkit.v1_16_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.inventory.Inventory;
@@ -22,12 +25,13 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public final class Utility {
-
 
     public static String colorize(String message) {
         return ChatColor.translateAlternateColorCodes('&', message);
@@ -203,7 +207,11 @@ public final class Utility {
         }
 
         SkullMeta meta = (SkullMeta) item.getItemMeta();
-        meta.setOwningPlayer(player);
+        if(isNewVersion) {
+            meta.setOwningPlayer(player);
+        }else {
+            meta.setOwner(player.getName());
+        }
         meta.setDisplayName(Utility.colorize(displayName));
         meta.setLore(Arrays.asList(lore));
 
@@ -228,7 +236,11 @@ public final class Utility {
         }
 
         SkullMeta meta = (SkullMeta) item.getItemMeta();
-        meta.setOwningPlayer(player);
+        if(isNewVersion) {
+            meta.setOwningPlayer(player);
+        }else {
+            meta.setOwner(player.getName());
+        }
         meta.setDisplayName(Utility.colorize(displayName));
 
         item.setItemMeta(meta);
@@ -349,24 +361,68 @@ public final class Utility {
         return Staff.getInstance().getConfig().getStringList("Random Teleport.block_blacklist");
     }
 
+    public static void sendActionBar(Player player, String message) {
+        try
+        {
+            Object chatTitle = getNMSClass("IChatBaseComponent").getDeclaredClasses()[0].getMethod("a", String.class).invoke(null, "{\"text\": \"" + colorize(message) + "\"}");
+
+            Constructor<?> titleConstructor = getNMSClass("PacketPlayOutTitle").getConstructor(getNMSClass("PacketPlayOutTitle").getDeclaredClasses()[0], getNMSClass("IChatBaseComponent"), int.class, int.class, int.class);
+            Object packet = titleConstructor.newInstance(getNMSClass("PacketPlayOutTitle").getDeclaredClasses()[0].getField("ACTIONBAR").get(null), chatTitle, 10, 70, 20);
+
+            sendPacket(player, packet);
+        }
+
+        catch (Exception ex)
+        {
+            //Do something
+        }
+    }
+
+    private static void sendPacket(Player player, Object packet)
+    {
+        try
+        {
+            Object handle = player.getClass().getMethod("getHandle").invoke(player);
+            Object playerConnection = handle.getClass().getField("playerConnection").get(handle);
+            playerConnection.getClass().getMethod("sendPacket", getNMSClass("Packet")).invoke(playerConnection, packet);
+        }
+        catch(Exception ex)
+        {
+            //Do something
+        }
+    }
+
+    private static Class<?> getNMSClass(String name)
+    {
+        try
+        {
+            return Class.forName("net.minecraft.server" + Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3] + "." + name);
+        }
+        catch(ClassNotFoundException ex)
+        {
+            //Do something
+        }
+        return null;
+    }
+
     public static void followPlayer(Player stalker, Player suspect) {
         stalker.closeInventory();
         int distance = Staff.getInstance().getConfig().getInt("Follow.distance");
         if (suspect == null) {
-            stalker.sendTitle(Utility.colorize("&6&lFollow Tool"), Utility.colorize("&cPlayer goes offline"), 10, 70, 20);
+            stalker.sendMessage("&6&lFollow Tool &cPlayer goes offline");
             return;
         }
         if (suspect.equals(stalker)) {
-            stalker.sendTitle(Utility.colorize("&6&lFollow Tool"), Utility.colorize("&cYou can't follow yourself"), 10, 70, 20);
+            stalker.sendMessage("&6&lFollow Tool &cYou can't follow yourself");
             return;
         }
         if (FollowRoster.getInstance().isSuspect(stalker.getName())) {
-            stalker.sendTitle(Utility.colorize("&6&lFollow Tool"), (Utility.colorize("&cYou can't follow someone while being followed")), 10, 70, 20);
+            stalker.sendMessage("&6&lFollow Tool &cYou can't follow someone while being followed");
             return;
         }
 
         FollowRoster.getInstance().follow(stalker, suspect, distance);
-        stalker.sendTitle(Utility.colorize("&6&lFollow Tool"), Utility.colorize("&fYou are now following &6") + suspect.getName(), 10, 70, 20);
+        stalker.sendMessage("&6&lFollow Tool &fYou are now following player &6" + suspect.getName());
         stalker.sendMessage(Utility.colorize("&a&lVanquil Staff &8>> &fType &ccancel &fto cancel"));
     }
 
@@ -399,6 +455,7 @@ public final class Utility {
         }
         player.sendMessage(Utility.colorize(plugin.getConfig().getString("Staff Vanish.hide-message")));
     }
+
 
     public static void vanishStaff(Player player, Staff plugin) {
         if(Storage.vanishedPlayers.contains(player.getUniqueId().toString())) {

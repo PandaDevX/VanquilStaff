@@ -133,4 +133,4 @@ Push:
 ##
 # World Edit
 World Edit:
-  command: '//wand'
+  command: '/wand'

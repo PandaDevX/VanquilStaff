@@ -30,17 +30,17 @@ public class TeleportHandler {
     public void teleport() {
         final Location location = getLocation();
         if (location == null) {
-            this.player.sendTitle(Utility.colorize("&6&lRandom Teleport"), Utility.colorize("&cFailed to find a safe location"), 10, 70, 20);
+            player.sendMessage(Utility.colorize("&6&lRandomTP &cFailed to find a safe place"));
             return;
         }
         if(player.isFlying())
             player.setFlying(false);
-        player.sendTitle(Utility.colorize("&6&lRandom Teleport"), Utility.colorize("&aLooking for a safe place..."), 10, 70, 20);
+        player.sendMessage(Utility.colorize("&6&lRandomTP &aLooking for a safe place..."));
         if(!world.getChunkAt((int)location.getX(), (int) location.getZ()).isLoaded()) {
             world.getChunkAt((int)location.getX(), (int) location.getZ()).load();
         }
         player.teleport(location);
-        player.sendTitle(Utility.colorize("&6&lRandom Teleport"), Utility.colorize("&aSuccessfully teleported to a safe place"), 10, 70, 20);
+        player.sendMessage(Utility.colorize("&6&lRandomTP &aSuccessfully teleported to a safe place"));
     }
 
     public int getX() {

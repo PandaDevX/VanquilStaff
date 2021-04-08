@@ -73,7 +73,8 @@ public class Report {
 
         for(Player player : Bukkit.getOnlinePlayers()) {
             if(Utility.getStaffNames().contains(player.getName())) {
-                player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(Utility.colorize("&a&lVanquil &8>> &7Check out the new report")));
+                Utility.sendActionBar(player, "&a&lVanquil Staff &8>> &cNew report arrived");
+                player.sendMessage(Utility.colorize("&a&lVanquil Staff &8>> &cNew report arrived"));
             }
         }
     }

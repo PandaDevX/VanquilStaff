@@ -53,7 +53,7 @@ public class Cases {
             report = null;
         }
 
-        builder.placePlaceHolders(28, 36, Material.BLACK_STAINED_GLASS_PANE);
+        builder.placePlaceHolders(28, 36);
 
         ItemBuilder prev = new ItemBuilder(Material.MAP);
         prev.setName("&3Prev");

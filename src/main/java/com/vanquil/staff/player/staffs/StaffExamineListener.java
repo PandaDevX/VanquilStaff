@@ -33,7 +33,7 @@ public class StaffExamineListener implements Listener {
             return;
         }
 
-        if(!clickEvent.getTitle().startsWith("Examine")) {
+        if(!clickEvent.getTitle().startsWith("(")) {
             clickEvent = null;
             return;
         }

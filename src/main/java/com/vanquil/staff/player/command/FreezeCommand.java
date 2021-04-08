@@ -31,7 +31,7 @@ public class FreezeCommand implements CommandExecutor {
 
             // check permission
 
-            if(!sender.hasPermission("staff.freeze.self")) {
+            if(!sender.hasPermission("staff.freeze.self") || !sender.hasPermission("staff.freeze.*")) {
                 Utility.sendNoPermissionMessage(sender);
                 return true;
             }
@@ -63,7 +63,7 @@ public class FreezeCommand implements CommandExecutor {
 
             // check permission
 
-            if(!sender.hasPermission("staff.freeze.all")) {
+            if(!sender.hasPermission("staff.freeze.all") || !sender.hasPermission("staff.freeze.*")) {
                 Utility.sendNoPermissionMessage(sender);
                 return true;
             }
@@ -92,7 +92,7 @@ public class FreezeCommand implements CommandExecutor {
             return true;
         }
 
-        if(!sender.hasPermission("staff.freeze.others")) {
+        if(!sender.hasPermission("staff.freeze.others") || !sender.hasPermission("staff.freeze.*")) {
             Utility.sendNoPermissionMessage(sender);
             return true;
         }

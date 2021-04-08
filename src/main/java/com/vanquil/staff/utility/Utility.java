@@ -443,7 +443,7 @@ public final class Utility {
 
         descriptions.put("slowchat (seconds)", "Slows chat");
         descriptions.put("unslow", "Un slow chat");
-        descriptions.put("freeze [player / all]", "Freeze a player");
+        descriptions.put("freeze [player / -all]", "Freeze a player");
         descriptions.put("falerts", "Listen to all censored chat");
         descriptions.put("filter", "Disable or enable chat filtering");
         descriptions.put("blacklist (player) (reason) [-p]", "Black list a player");
@@ -498,7 +498,7 @@ public final class Utility {
 
         descriptions.put("slowchat (seconds)", "Slows chat");
         descriptions.put("unslow", "Un slow chat");
-        descriptions.put("freeze [player / all]", "Freeze a player");
+        descriptions.put("freeze [player / -all]", "Freeze a player");
         descriptions.put("falerts", "Listen to all censored chat");
         descriptions.put("filter", "Disable or enable chat filtering");
         descriptions.put("blacklist (player) (reason) [-p]", "Black list a player");

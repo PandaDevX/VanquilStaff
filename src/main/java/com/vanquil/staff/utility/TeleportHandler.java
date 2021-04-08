@@ -1,12 +1,8 @@
 package com.vanquil.staff.utility;
 
-import com.vanquil.staff.Staff;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 
 public class TeleportHandler {
 
@@ -14,9 +10,9 @@ public class TeleportHandler {
 
     private final World world;
 
-    private int xCoord = -1;
+    private int xCoord;
 
-    private int zCoord = -1;
+    private int zCoord;
 
     private int xF;
 
@@ -37,6 +33,8 @@ public class TeleportHandler {
             this.player.sendTitle(Utility.colorize("&6&lRandom Teleport"), Utility.colorize("&cFailed to find a safe location"), 10, 70, 20);
             return;
         }
+        if(player.isFlying())
+            player.setFlying(false);
         player.sendTitle(Utility.colorize("&6&lRandom Teleport"), Utility.colorize("&aLooking for a safe place..."), 10, 70, 20);
         if(!world.getChunkAt((int)location.getX(), (int) location.getZ()).isLoaded()) {
             world.getChunkAt((int)location.getX(), (int) location.getZ()).load();

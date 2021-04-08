@@ -11,7 +11,8 @@ MySQL:
 ###
 ##
 # No permission message
-No Permission: '&c&lHey &fyou dont have permission to do that'
+No Permission: '&a&lVanquil &8>> &c&lHey &fyou dont have permission to do that'
+Usage: '&a&lVanquil &8>> &fCorrect Argument: &7/{argument}'
 
 ###
 ##
@@ -20,23 +21,23 @@ No Permission: '&c&lHey &fyou dont have permission to do that'
 ChatControl:
 # slow chat ( seconds )
   default: 0
-  message: '&cYou can chat again in &6{cooldown} &csecond(s)'
+  message: '&a&lVanquil &8>> &cYou can chat again in &6{cooldown} &csecond(s)'
 
 ###
 ##
 # Staff Vanish
 Staff Vanish:
   invisibility: true
-  hide-message: '&aYou have been vanished'
-  show-message: '&aYou are no longer vanished'
+  hide-message: '&a&lVanquil &8>> &fYou have been vanished'
+  show-message: '&a&lVanquil &8>> &fYou are no longer vanished'
 
 ###
 ##
 # Inventory Revive
 Restore Inventory:
-   message: '&6/revive: &fto restore your inventory'
-   unavailable: '&c&lHey &fyou have no inventory to restore'
-   success: '&aSuccessfully restored inventory'
+   message: '&a&lVanquil &8>> &f/revive or /invrestore: &7to restore your inventory'
+   unavailable: '&a&lVanquil &8>> &c&lHey &fyou have no inventory to restore'
+   success: '&a&lVanquil &8>> &fSuccessfully restored inventory'
 
 ###
 ##
@@ -126,7 +127,7 @@ Follow:
 
 # distance from where player is facing
 Push:
-  distance: 4
+  distance: 2
 
 ###
 ##

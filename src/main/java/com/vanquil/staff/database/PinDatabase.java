@@ -11,11 +11,9 @@ public class PinDatabase {
 
     private Player player;
     public PinDatabase(Player player) {
-        try {
-            PreparedStatement ps = DatabaseManager.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS pins "
-                    + "(UUID VARCHAR(100), PIN VARCHAR(100), LOGGED BOOLEAN)");
+        try (PreparedStatement ps = DatabaseManager.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS pins "
+                    + "(UUID VARCHAR(100), PIN VARCHAR(100), LOGGED BOOLEAN)")) {
             ps.executeUpdate();
-            ps = null;
         }catch (SQLException e) {
             e.printStackTrace();
         }
@@ -23,8 +21,7 @@ public class PinDatabase {
     }
 
     public void register(String pin) {
-        try {
-            PreparedStatement ps = preparedStatement("INSERT INTO pins (UUID,PIN,LOGGED) VALUES (?,?,?)");
+        try (PreparedStatement ps = preparedStatement("INSERT INTO pins (UUID,PIN,LOGGED) VALUES (?,?,?)")) {
             ps.setString(1, player.getUniqueId().toString());
             ps.setString(2, pin);
             ps.setBoolean(3, Staff.getInstance().getConfig().getBoolean("Auth Pin.login_after_register"));
@@ -37,14 +34,14 @@ public class PinDatabase {
     public boolean login(String pin) {
         Storage.playerIndexPin.remove(player);
         if(isRegistered()) {
-            try {
-                PreparedStatement ps = preparedStatement("SELECT * FROM pins WHERE UUID=?");
+            try (PreparedStatement ps = preparedStatement("SELECT * FROM pins WHERE UUID=?")) {
                 ps.setString(1, player.getUniqueId().toString());
-                ResultSet resultSet = ps.executeQuery();
-                if(resultSet.next()) {
-                    if(resultSet.getString("PIN").equals(pin)) {
-                        log();
-                        return true;
+                try (ResultSet resultSet = ps.executeQuery()) {
+                    if (resultSet.next()) {
+                        if (resultSet.getString("PIN").equals(pin)) {
+                            log();
+                            return true;
+                        }
                     }
                 }
             }catch (SQLException e) {
@@ -58,8 +55,7 @@ public class PinDatabase {
         Storage.staffAttempt.remove(player.getUniqueId().toString());
         Storage.playerIndexPin.remove(player);
         if(isRegistered()) {
-            try {
-                PreparedStatement ps = preparedStatement("UPDATE pins SET LOGGED=? WHERE UUID=?");
+            try (PreparedStatement ps = preparedStatement("UPDATE pins SET LOGGED=? WHERE UUID=?")) {
                 ps.setBoolean(1, false);
                 ps.setString(2, player.getUniqueId().toString());
                 ps.executeUpdate();
@@ -70,8 +66,7 @@ public class PinDatabase {
     }
 
     private void log() {
-        try {
-            PreparedStatement ps = preparedStatement("UPDATE pins SET LOGGED=? WHERE UUID=?");
+        try (PreparedStatement ps = preparedStatement("UPDATE pins SET LOGGED=? WHERE UUID=?")) {
             ps.setBoolean(1, true);
             ps.setString(2, player.getUniqueId().toString());
             ps.executeUpdate();
@@ -81,8 +76,7 @@ public class PinDatabase {
     }
 
     public boolean isRegistered() {
-        try {
-            PreparedStatement ps = preparedStatement("SELECT * FROM pins WHERE UUID=?");
+        try (PreparedStatement ps = preparedStatement("SELECT * FROM pins WHERE UUID=?")) {
             ps.setString(1, player.getUniqueId().toString());
             ResultSet resultSet = ps.executeQuery();
             return resultSet.next();
@@ -94,8 +88,7 @@ public class PinDatabase {
 
     public boolean isLoggedIn() {
         if(isRegistered()) {
-            try {
-                PreparedStatement ps = preparedStatement("SELECT * FROM pins WHERE UUID=?");
+            try (PreparedStatement ps = preparedStatement("SELECT * FROM pins WHERE UUID=?")) {
                 ps.setString(1, player.getUniqueId().toString());
                 ResultSet resultSet = ps.executeQuery();
                 if(resultSet.next()) {

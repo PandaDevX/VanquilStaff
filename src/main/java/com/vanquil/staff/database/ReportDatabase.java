@@ -15,11 +15,9 @@ import java.util.UUID;
 public class ReportDatabase {
 
     public ReportDatabase() {
-        try {
-            PreparedStatement ps = DatabaseManager.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS reports "
-                    + "(UUID VARCHAR(100), REPORT VARCHAR(100), REPORTER VARCHAR(100), URL VARCHAR(100), OPEN BOOLEAN)");
+        try (PreparedStatement ps = DatabaseManager.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS reports "
+                    + "(UUID VARCHAR(100), REPORT VARCHAR(100), REPORTER VARCHAR(100), URL VARCHAR(100), OPEN BOOLEAN)")) {
             ps.executeUpdate();
-            ps = null;
         }catch (SQLException e) {
             e.printStackTrace();
         }
@@ -27,35 +25,21 @@ public class ReportDatabase {
 
     public Set<Report> getReports(OfflinePlayer player) {
         Set<Report> reports = new HashSet<>();
-        try {
-            PreparedStatement ps = prepareStatement("SELECT * FROM reports WHERE UUID=?");
+        try (PreparedStatement ps = prepareStatement("SELECT * FROM reports WHERE UUID=?")) {
             ps.setString(1, player.getUniqueId().toString());
-            ResultSet resultSet = ps.executeQuery();
-            while(resultSet.next()) {
-                Location location = null;
-                if(resultSet.getString("LOCATION") != null) {
-                    String[] loc = resultSet.getString("LOCATION").split(",");
-                    location = new Location(Bukkit.getWorld(loc[0]),
-                            Double.parseDouble(loc[1]),
-                            Double.parseDouble(loc[2]),
-                            Double.parseDouble(loc[3]),
-                            Float.parseFloat(loc[4]),
-                            Float.parseFloat(loc[5]));
-                    loc = null;
+            try(ResultSet resultSet = ps.executeQuery()) {
+                while (resultSet.next()) {
+                    String report = resultSet.getString("REPORT");
+                    OfflinePlayer reporter = Bukkit.getOfflinePlayer(UUID.fromString(resultSet.getString("REPORTER")));
+                    String url = resultSet.getString("URL");
+                    Report reportObject = new Report(player, report, reporter, url, resultSet.getBoolean("OPEN"), resultSet.getString("DATE"));
+                    reports.add(reportObject);
+                    reportObject = null;
+                    url = null;
+                    reporter = null;
+                    report = null;
                 }
-                String report = resultSet.getString("REPORT");
-                OfflinePlayer reporter = Bukkit.getOfflinePlayer(UUID.fromString(resultSet.getString("REPORTER")));
-                String url = resultSet.getString("URL");
-                Report reportObject = new Report(player, report, reporter, url, resultSet.getBoolean("OPEN"), resultSet.getString("DATE"));
-                reports.add(reportObject);
-                reportObject = null;
-                url = null;
-                reporter = null;
-                report = null;
-                location = null;
             }
-            resultSet = null;
-            ps = null;
         }catch (SQLException e) {
             e.printStackTrace();
         }
@@ -64,24 +48,22 @@ public class ReportDatabase {
 
     public Set<Report> getReports() {
         Set<Report> reports = new HashSet<>();
-        try {
-            PreparedStatement ps = prepareStatement("SELECT * FROM reports");
-            ResultSet resultSet = ps.executeQuery();
-            while(resultSet.next()) {
-                OfflinePlayer player = Bukkit.getOfflinePlayer(UUID.fromString(resultSet.getString("UUID")));
-                String report = resultSet.getString("REPORT");
-                OfflinePlayer reporter = Bukkit.getOfflinePlayer(UUID.fromString(resultSet.getString("REPORTER")));
-                String url = resultSet.getString("URL");
-                Report reportObject = new Report(player, report, reporter, url, resultSet.getBoolean("OPEN"), resultSet.getString("DATE"));
-                reports.add(reportObject);
-                player = null;
-                reportObject = null;
-                url = null;
-                reporter = null;
-                report = null;
+        try (PreparedStatement ps = prepareStatement("SELECT * FROM reports")) {
+            try(ResultSet resultSet = ps.executeQuery()) {
+                while (resultSet.next()) {
+                    OfflinePlayer player = Bukkit.getOfflinePlayer(UUID.fromString(resultSet.getString("UUID")));
+                    String report = resultSet.getString("REPORT");
+                    OfflinePlayer reporter = Bukkit.getOfflinePlayer(UUID.fromString(resultSet.getString("REPORTER")));
+                    String url = resultSet.getString("URL");
+                    Report reportObject = new Report(player, report, reporter, url, resultSet.getBoolean("OPEN"), resultSet.getString("DATE"));
+                    reports.add(reportObject);
+                    player = null;
+                    reportObject = null;
+                    url = null;
+                    reporter = null;
+                    report = null;
+                }
             }
-            resultSet = null;
-            ps = null;
         }catch (SQLException e) {
             e.printStackTrace();
         }
@@ -89,9 +71,8 @@ public class ReportDatabase {
     }
 
     public void save(Report report) {
-        try {
-            PreparedStatement ps = prepareStatement("INSERT reports"
-                    + " (UUID,REPORT,REPORTER,URL,OPEN,DATE) VALUES (?,?,?,?,?,?)");
+        try (PreparedStatement ps = prepareStatement("INSERT reports"
+                    + " (UUID,REPORT,REPORTER,URL,OPEN,DATE) VALUES (?,?,?,?,?,?)")) {
             ps.setString(1, report.getReportedPlayer().getUniqueId().toString());
             ps.setString(2, report.getReport());
             ps.setString(3, report.getReporter().getUniqueId().toString());
@@ -105,12 +86,12 @@ public class ReportDatabase {
     }
 
     public boolean exists(OfflinePlayer player, String report) {
-        try {
-            PreparedStatement ps = prepareStatement("SELECT * FROM reports WHERE UUID=? AND REPORT=?");
+        try (PreparedStatement ps = prepareStatement("SELECT * FROM reports WHERE UUID=? AND REPORT=?")) {
             ps.setString(1, player.getUniqueId().toString());
             ps.setString(2, report);
-            ResultSet resultSet = ps.executeQuery();
-            return resultSet.next();
+            try(ResultSet resultSet = ps.executeQuery()) {
+                return resultSet.next();
+            }
         }catch (SQLException e) {
             e.printStackTrace();
         }
@@ -118,8 +99,7 @@ public class ReportDatabase {
     }
 
     public void close(OfflinePlayer player, String report) {
-        try {
-            PreparedStatement ps = prepareStatement("UPDATE reports SET OPEN=? AND DATE=? WHERE UUID=? AND REPORT=?");
+        try (PreparedStatement ps = prepareStatement("UPDATE reports SET OPEN=? AND DATE=? WHERE UUID=? AND REPORT=?")) {
             ps.setBoolean(1, false);
             ps.setString(2, new SimpleDateFormat("MMMMM dd yyyy hh:mm a").format(new Date(System.currentTimeMillis())));
             ps.setString(3, player.getUniqueId().toString());
@@ -130,8 +110,7 @@ public class ReportDatabase {
     }
 
     public void open(OfflinePlayer player, String report) {
-        try {
-            PreparedStatement ps = prepareStatement("UPDATE reports SET OPEN=? WHERE UUID=? AND REPORT=?");
+        try (PreparedStatement ps = prepareStatement("UPDATE reports SET OPEN=? WHERE UUID=? AND REPORT=?")) {
             ps.setBoolean(1, true);
             ps.setString(2, player.getUniqueId().toString());
             ps.setString(3, report);
@@ -141,13 +120,13 @@ public class ReportDatabase {
     }
 
     public boolean isOpen(OfflinePlayer player, String report) {
-        try {
-            PreparedStatement ps = prepareStatement("SELECT * FROM reports WHERE UUID=? AND REPORT=?");
+        try (PreparedStatement ps = prepareStatement("SELECT * FROM reports WHERE UUID=? AND REPORT=?")) {
             ps.setString(1, player.getUniqueId().toString());
             ps.setString(2, report);
-            ResultSet resultSet = ps.executeQuery();
-            if(resultSet.next()) {
-                return resultSet.getBoolean("OPEN");
+            try(ResultSet resultSet = ps.executeQuery()) {
+                if (resultSet.next()) {
+                    return resultSet.getBoolean("OPEN");
+                }
             }
         }catch (SQLException e) {
             e.printStackTrace();
@@ -155,13 +134,8 @@ public class ReportDatabase {
         return false;
     }
 
-    private PreparedStatement prepareStatement(String statement) {
-        try {
-            return DatabaseManager.getConnection().prepareStatement(statement);
-        }catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
+    private PreparedStatement prepareStatement(String statement) throws SQLException {
+        return DatabaseManager.getConnection().prepareStatement(statement);
     }
 
     public int getNumberOfReports() {

@@ -84,6 +84,7 @@ public class StaffAuth implements Listener {
     @EventHandler
     public void onMove(PlayerMoveEvent e) {
         if(DatabaseManager.getConnection() == null) return;
+        if(!Utility.getStaffNames().contains(e.getPlayer().getName())) return;
         PinDatabase pinDatabase = new PinDatabase(e.getPlayer());
         if(pinDatabase.isLoggedIn()) return;
         pinDatabase = null;

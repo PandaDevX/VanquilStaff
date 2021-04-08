@@ -73,8 +73,7 @@ public class Report {
 
         for(Player player : Bukkit.getOnlinePlayers()) {
             if(Utility.getStaffNames().contains(player.getName())) {
-                Utility.sendActionBar(player, "&a&lVanquil Staff &8>> &cNew report arrived");
-                player.sendMessage(Utility.colorize("&a&lVanquil Staff &8>> &cNew report arrived"));
+                Utility.sendActionBar(player, Utility.colorize("&a&lVanquil Staff &8>> &cNew report arrived"));
             }
         }
     }

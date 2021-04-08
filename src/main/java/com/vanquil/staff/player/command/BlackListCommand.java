@@ -4,6 +4,7 @@ import com.vanquil.staff.Staff;
 import com.vanquil.staff.data.Storage;
 import com.vanquil.staff.utility.Utility;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -32,44 +33,36 @@ public class BlackListCommand implements CommandExecutor {
             return true;
         }
 
-        // check if player is online
-        Player target = Bukkit.getPlayer(args[0]);
-        if(target == null) {
-            sender.sendMessage(Utility.colorize("&c&lTarget &fplayer must not be offline"));
+        OfflinePlayer target = Bukkit.getOfflinePlayer(args[0]);
+        if(target.isOnline()) {
+            target.getPlayer().kickPlayer(Utility.colorize("&c&lHey &fyou have been added to blacklist players"));
             return true;
         }
 
-        if(args.length == 2) {
-            String reason = args[1];
-
-            // add to black list
-            Storage.blackListPlayers.put(target.getUniqueId().toString(), reason);
-            sender.sendMessage(Utility.colorize("&c&lBlacklist &fPlayer &6" + target.getDisplayName() + " &fhas been added to blacklist players for > &6" + reason));
+        if(target.hasPlayedBefore()) {
+            sender.sendMessage(Utility.colorize("&c&lBlacklist &fPlayer &c" + args[0] + " &fdid not play the server before"));
             return true;
         }
 
-        if(args.length == 3) {
-            // if not -p
-            if(!args[2].equalsIgnoreCase("-p")) {
-                String reason = args[1];
+        StringBuilder builder = new StringBuilder();
+        for(int i = 1; i < args.length; i++) {
+            builder.append(args[i]).append(" ");
+        }
 
-                // add to black list
-                Storage.blackListPlayers.put(target.getUniqueId().toString(), reason);
-                sender.sendMessage(Utility.colorize("&c&lBlacklist &fPlayer &6" + target.getDisplayName() + " &fhas been added to blacklist players for > &6" + reason));
-                return true;
-            }
-            String reason = args[1];
+        String reason = builder.toString().trim();
 
+        if(reason.endsWith("-p")) {
             // add to black list
             Storage.blackListPlayers.put(target.getUniqueId().toString(), reason);
 
             for(Player player : Bukkit.getOnlinePlayers()) {
-                player.sendMessage(Utility.colorize("&c&lBlacklist &fPlayer &6" + target.getDisplayName() + " &fhas been added to blacklist players for > &6" + reason));
+                player.sendMessage(Utility.colorize("&c&lBlacklist &fPlayer &6" + target.getName() + " &fhas been added to blacklist players for > &6" + reason));
             }
             return true;
         }
-
-
+        // add to black list
+        Storage.blackListPlayers.put(target.getUniqueId().toString(), reason);
+        sender.sendMessage(Utility.colorize("&c&lBlacklist &fPlayer &6" + target.getName() + " &fhas been added to blacklist players for > &6" + reason));
         return false;
     }
 }

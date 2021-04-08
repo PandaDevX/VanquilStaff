@@ -70,8 +70,8 @@ public class TeleportHandler {
         Location location = TeleportUtils.safeizeLocation(new Location(this.world, x, y, z));
         if (location == null)
             return null;
-        String block = location.getBlock().getType().toString().toLowerCase().replace("_", " ");
-        String biome = location.getBlock().getBiome().toString().toLowerCase().replace("_", " ");
+        String block = location.getBlock().getType().name().toLowerCase().replace("_", " ");
+        String biome = location.getBlock().getBiome().name().toLowerCase().replace("_", " ");
         if (Utility.getBlackListBiomes().contains(biome))
             location = TeleportUtils.safeizeLocation(getLocation());
         if (Utility.getBlackListBlocks().contains(block))

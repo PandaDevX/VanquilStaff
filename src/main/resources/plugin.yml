@@ -24,7 +24,7 @@ commands:
       aliases: [v, hidestaff]
    staffs:
       description: check all available staffs
-      aliases: [slist, stafflist, onlinestaff]
+      aliases: [slist, stafflist]
    cps:
       description: check all of cps
       aliases: [cpsreport]
@@ -38,3 +38,6 @@ commands:
    staff:
       description: staff mode
       aliases: [mod, staffmode]
+   adminmode:
+      description: admin mode
+      aliases: [am, amode]

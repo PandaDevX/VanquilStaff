@@ -6,10 +6,15 @@ import com.vanquil.staff.database.PinDatabase;
 import com.vanquil.staff.database.Report;
 import com.vanquil.staff.database.ReportDatabase;
 import com.vanquil.staff.gui.inventory.Pin;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -362,6 +367,7 @@ public final class Utility {
 
         FollowRoster.getInstance().follow(stalker, suspect, distance);
         stalker.sendTitle(Utility.colorize("&6&lFollow Tool"), Utility.colorize("&fYou are now following &6") + suspect.getName(), 10, 70, 20);
+        stalker.sendMessage(Utility.colorize("&a&lVanquil Staff &8>> &fType &ccancel &fto cancel"));
     }
 
     public static void vanishPlayer(Player player, Staff plugin) {
@@ -419,5 +425,84 @@ public final class Utility {
         }
         player.setVelocity(player.getLocation().getDirection().clone().multiply(Staff.getInstance().getConfig().getInt("Push.distance")));
         return true;
+    }
+
+    public static void stopFollow(AsyncPlayerChatEvent e) {
+        Stalker s = FollowRoster.getInstance().unfollow(e.getPlayer());
+        if(s == null) return;
+
+        if(e.getMessage().equalsIgnoreCase("cancel")) {
+            e.getPlayer().sendTitle(Utility.colorize("&6&lFollow Tool"), Utility.colorize("&fYou are no longer following &6" + s.getSuspectName()), 10, 70, 20);
+        }
+
+    }
+
+    public static void sendHelpPage(Player player) {
+        HashMap<String, String> descriptions = new HashMap<>();
+
+        descriptions.put("slowchat (seconds) &6or &8{ &c/chatslow &8}", "Slows chat");
+        descriptions.put("unslow", "Un slow chat");
+        descriptions.put("freeze [player / all]", "Freeze a player");
+        descriptions.put("falerts", "Listen to all censored chat");
+        descriptions.put("filter", "Disable or enable chat filtering");
+        descriptions.put("blacklist (player) (reason) [-p]", "Black list a player");
+        descriptions.put("revive &6or &8{ &c/invrestore &8}", "Restore lost inventory");
+        descriptions.put("vanish &6or &8{ &c/hidestaff, /v &8}", "Hide to other players");
+        descriptions.put("staffs &6or &8{ &c/stafflist,/slist &8}", "Staff list");
+        descriptions.put("cps &6or &8{ &c/cpsreport &8}", "Listen to all click per listeners over 1 minute period");
+        descriptions.put("report (player) (reason)", "Opens a menu to report a player");
+        descriptions.put("reports", "Lists of all the reports");
+        descriptions.put("vanquilstaff reload &6or &8{ &c/vs reload &8}", "Reload the config");
+        descriptions.put("vanquilstaff help &6or &8{ &c/vs help &8}", "Displays this");
+        descriptions.put("staff &6or &8{ &c/mod, /staffmode &8}", "Staff mode");
+        descriptions.put("adminmode &6or &8{ &c/am, /amode &8}", "Admin mode");
+        player.sendMessage(Utility.colorize("&a&lVanquil Staff &8>> &7Help Page"));
+        player.sendMessage("");
+        player.sendMessage(Utility.colorize("&a&lVanquil Staff &8>> &6[] - &fNot Required"));
+        player.sendMessage(Utility.colorize("&a&lVanquil Staff &8>> &6() - &fRequired"));
+        player.sendMessage("");
+        for (String key : descriptions.keySet()) {
+
+            TextComponent part1 = new TextComponent(TextComponent.fromLegacyText(Utility.colorize("&a&lVanquil &8>> ")));
+            TextComponent part2 = new TextComponent(TextComponent.fromLegacyText(Utility.colorize("&f/" + key)));
+            part2.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/" + key));
+            part2.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(descriptions.get(key)).color(net.md_5.bungee.api.ChatColor.YELLOW).create()));
+            player.spigot().sendMessage(part1, part2);
+
+            part1 = null;
+            part2 = null;
+        }
+        descriptions = null;
+    }
+
+    public static void sendHelpPage(CommandSender sender) {
+        HashMap<String, String> descriptions = new HashMap<>();
+
+        descriptions.put("slowchat (seconds)", "Slows chat");
+        descriptions.put("unslow", "Un slow chat");
+        descriptions.put("freeze [player / all]", "Freeze a player");
+        descriptions.put("falerts", "Listen to all censored chat");
+        descriptions.put("filter", "Disable or enable chat filtering");
+        descriptions.put("blacklist (player) (reason) [-p]", "Black list a player");
+        descriptions.put("revive", "Restore lost inventory");
+        descriptions.put("vanish", "Hide to other players");
+        descriptions.put("staffs", "Staff list");
+        descriptions.put("cps", "Listen to all click per listeners over 1 minute period");
+        descriptions.put("report (player) (reason)", "Opens a menu to report a player");
+        descriptions.put("reports", "Lists of all the reports");
+        descriptions.put("vanquilstaff reload", "Reload the config");
+        descriptions.put("vanquilstaff help", "Displays this");
+        descriptions.put("staff", "Staff mode");
+        descriptions.put("adminmode", "Admin mode");
+
+        sender.sendMessage(Utility.colorize("&a&lVanquil Staff &8>> &7Help Page"));
+        sender.sendMessage("");
+        sender.sendMessage(Utility.colorize("&a&lVanquil Staff &8>> &6[] - &fNot Required"));
+        sender.sendMessage(Utility.colorize("&a&lVanquil Staff &8>> &6() - &fRequired"));
+        sender.sendMessage("");
+        for(String key : descriptions.keySet()) {
+            sender.sendMessage(Utility.colorize("&a&lVanquil &8>> &f/" + key + ":" + " " + descriptions.get(key)));
+        }
+        descriptions = null;
     }
 }

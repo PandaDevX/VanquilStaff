@@ -5,6 +5,7 @@ import com.vanquil.staff.utility.Utility;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 public class MainCommand implements CommandExecutor {
 
@@ -21,7 +22,7 @@ public class MainCommand implements CommandExecutor {
             return true;
         }
         if(args.length == 0) {
-            Utility.sendCorrectArgument(sender, label + " <help|reload>");
+            Utility.sendCorrectArgument(sender, label + " <help / reload>");
             return true;
         }
 
@@ -31,6 +32,11 @@ public class MainCommand implements CommandExecutor {
             return true;
         }
 
+        if(sender instanceof Player) {
+            Utility.sendHelpPage((Player) sender);
+        } else {
+            Utility.sendHelpPage(sender);
+        }
 
         return false;
     }

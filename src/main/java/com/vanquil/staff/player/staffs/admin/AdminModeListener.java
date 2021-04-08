@@ -50,7 +50,7 @@ public class AdminModeListener implements Listener {
             return;
         }
 
-        if(clickEvent.clicked("Wand")) {
+        if(clickEvent.clicked("WE Wand")) {
             e.setCancelled(true);
 
             clickEvent.getPlayer().performCommand(Staff.getInstance().getConfig().getString("World Edit.command", "//wand"));

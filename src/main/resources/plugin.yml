@@ -28,3 +28,5 @@ commands:
    cps:
       description: check all of cps
       aliases: [cpsreport]
+   report:
+      description: report a player

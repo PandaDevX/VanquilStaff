@@ -16,7 +16,7 @@ public class ReportDatabase {
 
     public ReportDatabase() {
         try (PreparedStatement ps = DatabaseManager.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS reports "
-                    + "(UUID VARCHAR(100), REPORT VARCHAR(100), REPORTER VARCHAR(100), URL VARCHAR(100), OPEN BOOLEAN)")) {
+                    + "(UUID VARCHAR(100), REPORT VARCHAR(100), REPORTER VARCHAR(100), URL VARCHAR(100), OPEN BOOLEAN, DATE VARCHAR(100))")) {
             ps.executeUpdate();
         }catch (SQLException e) {
             e.printStackTrace();

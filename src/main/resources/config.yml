@@ -43,7 +43,21 @@ Restore Inventory:
 # Clicks Per Second
 CPS:
   left_click_only: true
+  warning: 8
+  warning_prefix: '&4&lWarning &e'
 
+###
+##
+# Auth Pin
+Auth Pin:
+   numbers: 'cyan wool'
+   name: '&c{name}'
+   login: 'furnace'
+   register: 'furnace'
+   placeholder: 'black stained glass pane'
+   login_after_register: true
+   eraser: tnt
+   max_attempt: 4
 
 ###
 ##

@@ -31,7 +31,9 @@ public class StaffQuit implements Listener {
                 OfflinePlayer player = Bukkit.getOfflinePlayer(staff);
 
                 if(player.isOnline()) {
-                    player.getPlayer().sendMessage(Utility.colorize(fileUtil.get().getString("leave").replace("{staff}", e.getPlayer().getName())));
+                    for(String message : fileUtil.get().getStringList("join")) {
+                        player.getPlayer().sendMessage(Utility.colorize(message.replace("{staff}", e.getPlayer().getName())));
+                    }
                 }
                 player = null;
             }

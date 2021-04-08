@@ -1,5 +1,18 @@
+# add description if you want
+
 Staffs:
 
   RedSpeaks:
-    prefix: '&8[&eDeveloper] &b'
-    show_realname: true
+    prefix: '&8[&eDeveloper&8] &b'
+    description: 
+       - ''
+       - '&7Age: &621 years old'
+       - '&7Coolness: &6100%'
+       - '&7Status: &r{status}'
+  RamenNoodles:
+    prefix: '&8[&eDeveloper&8] &b'
+    
+join: 
+  - '&6{staff} &ahas joined'
+leave:
+  - '&6{staff} &cleft'

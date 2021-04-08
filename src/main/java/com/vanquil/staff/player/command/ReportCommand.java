@@ -32,11 +32,6 @@ public class ReportCommand implements CommandExecutor {
             sender.sendMessage(Utility.colorize("&c&lHey &fyou must be a player to do that"));
             return true;
         }
-
-        if(args.length < 2) {
-            Utility.sendCorrectArgument(sender, "report (player) (reason)");
-            return true;
-        }
         // check if still has cool down
         Player player = (Player)sender;
         if(Storage.playerReportCoolDown.containsKey(player.getUniqueId().toString())) {
@@ -46,6 +41,10 @@ public class ReportCommand implements CommandExecutor {
                 player.sendMessage(Utility.colorize("&c&lHey &fyou can only send report every &62 minutes"));
                 return true;
             }
+        }
+        if(args.length < 2) {
+            Utility.sendCorrectArgument(sender, "report (player) (reason)");
+            return true;
         }
         OfflinePlayer reportedPlayer = Bukkit.getOfflinePlayer(args[0]);
 

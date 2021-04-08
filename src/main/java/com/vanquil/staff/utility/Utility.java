@@ -348,20 +348,20 @@ public final class Utility {
         stalker.closeInventory();
         int distance = Staff.getInstance().getConfig().getInt("Follow.distance");
         if (suspect == null) {
-            stalker.sendTitle("&6&lFollow Tool", "&cPlayer goes offline", 10, 70, 20);
+            stalker.sendTitle(Utility.colorize("&6&lFollow Tool"), Utility.colorize("&cPlayer goes offline"), 10, 70, 20);
             return;
         }
         if (suspect.equals(stalker)) {
-            stalker.sendTitle("&6&lFollow Tool", "&cYou can't follow yourself", 10, 70, 20);
+            stalker.sendTitle(Utility.colorize("&6&lFollow Tool"), Utility.colorize("&cYou can't follow yourself"), 10, 70, 20);
             return;
         }
         if (FollowRoster.getInstance().isSuspect(stalker.getName())) {
-            stalker.sendTitle("&6&lFollow Tool", "&cYou can't follow someone while being followed", 10, 70, 20);
+            stalker.sendTitle(Utility.colorize("&6&lFollow Tool"), (Utility.colorize("&cYou can't follow someone while being followed")), 10, 70, 20);
             return;
         }
 
         FollowRoster.getInstance().follow(stalker, suspect, distance);
-        stalker.sendTitle("&6&lFollow Tool", "&fYou are now following &6" + suspect.getName(), 10, 70, 20);
+        stalker.sendTitle(Utility.colorize("&6&lFollow Tool"), Utility.colorize("&fYou are now following &6") + suspect.getName(), 10, 70, 20);
     }
 
     public static void vanishPlayer(Player player, Staff plugin) {
@@ -392,5 +392,32 @@ public final class Utility {
             online.hidePlayer(plugin, player);
         }
         player.sendMessage(Utility.colorize(plugin.getConfig().getString("Staff Vanish.hide-message")));
+    }
+
+    public static void vanishStaff(Player player, Staff plugin) {
+        if(Storage.vanishedPlayers.contains(player.getUniqueId().toString())) {
+            return;
+        }
+
+        // vanish player
+        if(plugin.getConfig().getBoolean("Staff Vanish.invisibility")) {
+            player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 2147483647, 1, false));
+        }
+        Storage.vanishedPlayers.add(player.getUniqueId().toString());
+        for(Player online : Bukkit.getOnlinePlayers()) {
+            if(online.hasPermission("staff.vanish")) {
+                continue;
+            }
+            online.hidePlayer(plugin, player);
+        }
+        player.sendMessage(Utility.colorize(plugin.getConfig().getString("Staff Vanish.hide-message")));
+    }
+
+    public static boolean pushPlayer(Player player) {
+        if(player == null) {
+            return false;
+        }
+        player.setVelocity(player.getLocation().getDirection().clone().multiply(Staff.getInstance().getConfig().getInt("Push.distance")));
+        return true;
     }
 }

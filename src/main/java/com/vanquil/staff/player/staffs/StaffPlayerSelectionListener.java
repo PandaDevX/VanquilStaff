@@ -107,10 +107,16 @@ public class StaffPlayerSelectionListener implements Listener {
 
                 player.sendMessage(Utility.colorize("&a&lVanquil Staff &8>> &7Successfully added frozen spell to that player"));
                 break;
-            case "Follow":
+            case "Follow Tool":
                 Utility.followPlayer(player, Bukkit.getPlayer(Storage.playerSelection.get(player.getUniqueId().toString())));
                 break;
             case "Push Forward":
+                player.closeInventory();
+                if(Utility.pushPlayer(Bukkit.getPlayer(Storage.playerSelection.get(player.getUniqueId().toString())))) {
+                    player.sendMessage(Utility.colorize("&a&lVanquil Staff &8>> &7Successfully pushed that player"));
+                    break;
+                }
+                player.sendMessage(Utility.colorize("&a&lVanquil Staff &8>> &7Player not found"));
                 break;
             default:
                 break;

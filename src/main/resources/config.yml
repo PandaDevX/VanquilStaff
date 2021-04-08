@@ -118,3 +118,18 @@ Follow:
    significantDistance: 0.1999
    rotateHead: false
    followStyle: 1
+
+
+###
+##
+# Push Forward
+
+# distance from where player is facing
+Push:
+  distance: 4
+
+###
+##
+# World Edit
+World Edit:
+  command: '//wand'

@@ -11,6 +11,8 @@ import com.vanquil.staff.database.PinDatabase;
 import com.vanquil.staff.player.command.*;
 import com.vanquil.staff.player.events.*;
 import com.vanquil.staff.player.staffs.*;
+import com.vanquil.staff.player.staffs.admin.AdminModeCommand;
+import com.vanquil.staff.player.staffs.admin.AdminModeListener;
 import com.vanquil.staff.utility.FileUtil;
 import com.vanquil.staff.utility.Utility;
 import com.vanquil.staff.vanquilstaff.MainCommand;
@@ -69,8 +71,10 @@ public final class Staff extends JavaPlugin {
         new ReportsCommand(this);
         new MainCommand(this);
         new StaffModeCommand(this);
+        new AdminModeCommand(this);
 
         // listeners
+        new AdminModeListener(this);
         new StaffExamineListener(this);
         new StaffPlayerSelectionListener(this);
         new StaffModeListener(this);

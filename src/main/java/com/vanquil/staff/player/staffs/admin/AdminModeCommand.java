@@ -1,24 +1,24 @@
-package com.vanquil.staff.player.staffs;
+package com.vanquil.staff.player.staffs.admin;
 
 import com.vanquil.staff.Staff;
 import com.vanquil.staff.data.Storage;
-import com.vanquil.staff.gui.inventory.StaffMode;
+import com.vanquil.staff.gui.inventory.AdminMode;
 import com.vanquil.staff.utility.Utility;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class StaffModeCommand implements CommandExecutor {
+public class AdminModeCommand implements CommandExecutor {
 
-    public StaffModeCommand(Staff plugin) {
-        plugin.getCommand("staff").setExecutor(this);
+    public AdminModeCommand(Staff plugin) {
+        plugin.getCommand("adminmode").setExecutor(this);
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
-        if(!sender.hasPermission("staff.staffmode")) {
+        if(!sender.hasPermission("staff.adminmode")) {
             Utility.sendNoPermissionMessage(sender);
             return true;
         }
@@ -33,7 +33,7 @@ public class StaffModeCommand implements CommandExecutor {
         Storage.playerSelection.remove(player.getUniqueId().toString());
         Storage.staffTool.remove(player.getUniqueId().toString());
 
-        StaffMode staffMode = new StaffMode();
+        AdminMode staffMode = new AdminMode();
         staffMode.setup();
         staffMode.openInventory(player);
 

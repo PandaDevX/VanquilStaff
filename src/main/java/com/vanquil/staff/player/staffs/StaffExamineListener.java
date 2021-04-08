@@ -54,7 +54,7 @@ public class StaffExamineListener implements Listener {
         }
         if(clickEvent.clicked("ender chest")) {
             e.setCancelled(true);
-            eChest = Bukkit.createInventory(player.getPlayer(), (9 * 5), Utility.colorize("&4" + player.getName() + "'s Ender Chest"));
+            eChest = Bukkit.createInventory(player.getPlayer(), (9 * 3), Utility.colorize("&4" + player.getName() + "'s Ender Chest"));
             eChest.setContents(player.getPlayer().getEnderChest().getContents());
             viewer.openInventory(eChest);
 

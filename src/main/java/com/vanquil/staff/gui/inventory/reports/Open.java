@@ -1,34 +1,37 @@
 package com.vanquil.staff.gui.inventory.reports;
 
-import com.vanquil.staff.database.ReportDatabase;
 import com.vanquil.staff.database.Report;
+import com.vanquil.staff.database.ReportDatabase;
 import com.vanquil.staff.utility.InventoryBuilder;
 import com.vanquil.staff.utility.ItemBuilder;
 import com.vanquil.staff.utility.PaginatedList;
 import com.vanquil.staff.utility.Utility;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Open {
 
+
     Inventory inventory = null;
 
-    public void setup(int page) {
+    public void setup(int page, OfflinePlayer player) {
 
         InventoryBuilder builder = new InventoryBuilder("&4Open Cases", 4);
 
         ReportDatabase reportDatabase = new ReportDatabase();
         List<Report> openReports = new ArrayList<>();
 
-        for(Report report : reportDatabase.getReports()) {
+        for(Report report : reportDatabase.getReports(player)) {
 
-            if(!report.isOpen())
+            if(report.isOpen()) {
+                openReports.add(report);
                 continue;
-
-            openReports.add(report);
+            }
         }
 
         if(openReports.isEmpty()) {
@@ -36,15 +39,18 @@ public class Open {
             return;
         }
 
+
         PaginatedList paginatedList = new PaginatedList(openReports, 27);
         List<Report> availableReports = paginatedList.getPage(page);
 
         for(int i = 0; i < availableReports.size(); i++) {
 
             ItemBuilder report = new ItemBuilder(availableReports.get(i).getPlayerHead());
-            report.setName("&6" + availableReports.get(i));
-            report.setLore("", "&2Reported by: &6" + availableReports.get(i).getReporter().getName());
-            report.setLore("", "&2Date created: &6" + availableReports.get(i).getDate());
+            report.setName("&6" + availableReports.get(i).getReportedPlayer().getName());
+            report.setLore("", "&2Reported by: &6" + availableReports.get(i).getReporter().getName(), "&2Date Reported: &6" + availableReports.get(i).getDate(),
+                    "&2Reason: &6" + availableReports.get(i).getReport(), "", "&6Right Click: &7to close the case");
+
+            builder.setItem(i + 1, report);
 
             report = null;
         }

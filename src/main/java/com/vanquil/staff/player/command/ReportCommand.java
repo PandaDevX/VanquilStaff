@@ -34,12 +34,14 @@ public class ReportCommand implements CommandExecutor {
         }
         // check if still has cool down
         Player player = (Player)sender;
-        if(Storage.playerReportCoolDown.containsKey(player.getUniqueId().toString())) {
+        if(!sender.hasPermission("player.report.bypass")) {
+            if (Storage.playerReportCoolDown.containsKey(player.getUniqueId().toString())) {
 
-            if(Storage.playerReportCoolDown.get(player.getUniqueId().toString()) > System.currentTimeMillis()) {
+                if (Storage.playerReportCoolDown.get(player.getUniqueId().toString()) > System.currentTimeMillis()) {
 
-                player.sendMessage(Utility.colorize("&c&lHey &fyou can only send report every &62 minutes"));
-                return true;
+                    player.sendMessage(Utility.colorize("&c&lHey &fyou can only send report every &62 minutes"));
+                    return true;
+                }
             }
         }
         if(args.length < 2) {
@@ -57,7 +59,9 @@ public class ReportCommand implements CommandExecutor {
         for(int i = 1; i < args.length; i++) {
             builder.append(args[i]).append(" ");
         }
-        Report report = new Report(reportedPlayer, builder.toString().trim(), player, true, new SimpleDateFormat("MMMMM dd yyyy hh:mm a").format(new Date(System.currentTimeMillis())));
+        String reason = Utility.colorize(builder.toString().trim());
+        reason = Utility.stripColor(reason);
+        Report report = new Report(reportedPlayer, reason, player, true, new SimpleDateFormat("MMMMM dd yyyy hh:mm a").format(new Date(System.currentTimeMillis())));
 
 
         Storage.playerReport.put(player.getUniqueId().toString(), report);

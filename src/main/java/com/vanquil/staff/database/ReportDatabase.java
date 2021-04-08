@@ -7,10 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 public class ReportDatabase {
 
@@ -44,6 +41,20 @@ public class ReportDatabase {
             e.printStackTrace();
         }
         return reports;
+    }
+
+    public Set<String> getReportedPlayers() {
+        Set<String> reportedPlayers = new HashSet<>();
+        try (PreparedStatement ps = prepareStatement("SELECT * FROM reports")) {
+            try(ResultSet resultSet = ps.executeQuery()) {
+                while (resultSet.next()) {
+                    reportedPlayers.add(resultSet.getString("UUID"));
+                }
+            }
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return reportedPlayers;
     }
 
     public Set<Report> getReports() {
@@ -98,12 +109,13 @@ public class ReportDatabase {
         return false;
     }
 
-    public void close(OfflinePlayer player, String report) {
-        try (PreparedStatement ps = prepareStatement("UPDATE reports SET OPEN=? AND DATE=? WHERE UUID=? AND REPORT=?")) {
+    public void close(OfflinePlayer player, String report, String date) {
+        try (PreparedStatement ps = prepareStatement("UPDATE reports SET OPEN=? WHERE UUID=? AND REPORT=? AND DATE=?")) {
             ps.setBoolean(1, false);
-            ps.setString(2, new SimpleDateFormat("MMMMM dd yyyy hh:mm a").format(new Date(System.currentTimeMillis())));
-            ps.setString(3, player.getUniqueId().toString());
-            ps.setString(4, report);
+            ps.setString(2, player.getUniqueId().toString());
+            ps.setString(3, report);
+            ps.setString(4, date);
+            ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -136,6 +148,23 @@ public class ReportDatabase {
 
     private PreparedStatement prepareStatement(String statement) throws SQLException {
         return DatabaseManager.getConnection().prepareStatement(statement);
+    }
+
+    public int getNumberOfOpenReports(OfflinePlayer player) {
+        List<Report> openReports = new ArrayList<>();
+
+        for(Report report : getReports(player)) {
+
+            if(report.isOpen()) {
+                openReports.add(report);
+                continue;
+            }
+        }
+
+        if(openReports.isEmpty()) {
+            return 0;
+        }
+        return openReports.size();
     }
 
     public int getNumberOfReports() {

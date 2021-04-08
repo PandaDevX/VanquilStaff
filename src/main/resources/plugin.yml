@@ -30,3 +30,5 @@ commands:
       aliases: [cpsreport]
    report:
       description: report a player
+   reports:
+      description: list of all reports

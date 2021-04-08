@@ -1,54 +1,55 @@
 package com.vanquil.staff.gui.inventory.reports;
 
-import com.vanquil.staff.database.Report;
 import com.vanquil.staff.database.ReportDatabase;
 import com.vanquil.staff.utility.InventoryBuilder;
 import com.vanquil.staff.utility.ItemBuilder;
 import com.vanquil.staff.utility.PaginatedList;
 import com.vanquil.staff.utility.Utility;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
-
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
-public class Close {
+public class Cases {
 
     Inventory inventory = null;
 
-    public void setup(int page, OfflinePlayer player) {
+    public void setup(int page) {
 
-        InventoryBuilder builder = new InventoryBuilder("&4Closed Cases", 4);
+        InventoryBuilder builder = new InventoryBuilder("&4Cases", 4);
 
         ReportDatabase reportDatabase = new ReportDatabase();
-        List<Report> closeReports = new ArrayList<>();
 
-        for(Report report : reportDatabase.getReports(player)) {
+        List<String> reportedPlayers = new ArrayList<>(reportDatabase.getReportedPlayers());
 
-            if(report.isOpen())
-                continue;
-
-            closeReports.add(report);
+        PaginatedList paginatedList = new PaginatedList(reportedPlayers, 27);
+        if(page > paginatedList.getMaximumPage()) {
+            page = paginatedList.getMaximumPage();
         }
-        if(closeReports.isEmpty()) {
+        if(page <= 0) {
+            page = 1;
+        }
+        List<String> availableReports = paginatedList.getPage(page);
+
+        if(availableReports.isEmpty()) {
             inventory = null;
             return;
         }
 
-        PaginatedList paginatedList = new PaginatedList(closeReports, 27);
-        List<Report> availableReports = paginatedList.getPage(page);
-
         for(int i = 0; i < availableReports.size(); i++) {
 
-            ItemBuilder report = new ItemBuilder(availableReports.get(i).getPlayerHead());
-            report.setName("&6" + availableReports.get(i).getReportedPlayer().getName());
-            report.setLore("", "&2Reported by: &6" + availableReports.get(i).getReporter().getName(), "&2Date Closed: &6" + availableReports.get(i).getDate(),
-                    "&2Reason: &6" + availableReports.get(i).getReport());
+            OfflinePlayer player = Bukkit.getOfflinePlayer(UUID.fromString(availableReports.get(i)));
+            ItemBuilder report = new ItemBuilder(Utility.getSkull(player, "&6" + player.getName()));
+            report.setLore("", "&2Number Of Open Cases: &6" + reportDatabase.getNumberOfOpenReports(player) + " Report(s)",
+                    "&2Number Of Closed Cases: &6: &6" + (reportDatabase.getNumberOfReports(player) - reportDatabase.getNumberOfOpenReports(player)) + " Report(s)",
+                    "&2Latest Report Date: &6" + Utility.getLatestReport(reportDatabase.getReports(player)).getDate(),
+                    "&2Person Reported This Player (Latest): &6" + Utility.getLatestReport(reportDatabase.getReports(player)).getReporter().getName());
 
             builder.setItem(i + 1, report);
-
             report = null;
         }
 
@@ -72,7 +73,7 @@ public class Close {
 
         builder = null;
         reportDatabase = null;
-        closeReports = null;
+        reportedPlayers = null;
         paginatedList = null;
         availableReports = null;
         prev = null;
@@ -83,7 +84,7 @@ public class Close {
 
     public void openInventory(Player player) {
         if(inventory == null) {
-            player.sendMessage(Utility.colorize("&c&lReports>> &6There are no closed reports available"));
+            player.sendMessage(Utility.colorize("&c&lReports>> &6There are no open reports available"));
             return;
         }
         player.openInventory(inventory);

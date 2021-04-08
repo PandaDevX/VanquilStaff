@@ -36,11 +36,11 @@ public final class Utility {
     }
 
     public static void sendCorrectArgument(CommandSender sender, String argument) {
-        sender.sendMessage(colorize("&b/" + argument));
+        sender.sendMessage(colorize(Staff.getInstance().getConfig().getString("Usage").replace("{argument}", argument)));
     }
 
     public static void sendCorrectArgument(Player sender, String argument) {
-        sender.sendMessage(colorize("&b/" + argument));
+        sender.sendMessage(colorize(Staff.getInstance().getConfig().getString("Usage").replace("{argument}", argument)));
     }
 
     public static boolean isInt(String number) {
@@ -261,22 +261,6 @@ public final class Utility {
         reportDatabase = null;
     }
 
-    public static void closeReport(OfflinePlayer player, String report) {
-        ReportDatabase reportDatabase = new ReportDatabase();
-        reportDatabase.close(player, report);
-        reportDatabase = null;
-    }
-
-
-    public static void changeState(OfflinePlayer player, String report) {
-        ReportDatabase reportDatabase = new ReportDatabase();
-        if(!reportDatabase.exists(player, report)) return;
-        if(reportDatabase.isOpen(player, report)) {
-            reportDatabase.close(player, report);
-        }
-        reportDatabase.open(player, report);
-    }
-
     public static void auth(Player player) {
         PinDatabase pinDatabase = new PinDatabase(player);
         final String type = pinDatabase.isRegistered() ? "login" : "register";
@@ -329,5 +313,13 @@ public final class Utility {
                 inventory.setItem(slot, itemStack);
             }
         }.runTaskLater(Staff.getInstance(), 60L);
+    }
+
+    public static Report getLatestReport(final Collection<Report> c) {
+        Report lastElement = null;
+        for(Report report : c) {
+            lastElement = report;
+        }
+        return lastElement;
     }
 }

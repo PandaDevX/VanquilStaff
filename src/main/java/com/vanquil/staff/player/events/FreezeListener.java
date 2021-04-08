@@ -2,6 +2,7 @@ package com.vanquil.staff.player.events;
 
 import com.vanquil.staff.Staff;
 import com.vanquil.staff.data.Storage;
+import org.bukkit.GameMode;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -22,7 +23,16 @@ public class FreezeListener implements Listener {
         if(!Storage.frozenPlayers.contains(e.getPlayer().getUniqueId().toString())) return;
 
         // cancel movement if frozen
-        e.setCancelled(true);
+        if (e.getFrom().getZ() != e.getTo().getZ() && e.getFrom().getX() != e.getTo().getX()) {
+            if(e.getPlayer().isFlying()) {
+                e.getPlayer().setFlying(false);
+            }
+            if(e.getPlayer().getGameMode() == GameMode.CREATIVE) {
+                e.getPlayer().setGameMode(GameMode.SURVIVAL);
+            }
+            e.setTo(e.getFrom());
+        }
+
     }
 
     @EventHandler

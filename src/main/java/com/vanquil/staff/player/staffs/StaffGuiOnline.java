@@ -5,7 +5,6 @@ import com.vanquil.staff.utility.FileUtil;
 import com.vanquil.staff.utility.InventoryBuilder;
 import com.vanquil.staff.utility.Utility;
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -34,6 +33,17 @@ public class StaffGuiOnline {
                 continue;
             List<String> lore =  fileUtil.get().get("Staffs." + staff.get(i) + ".description") != null ? fileUtil.get().getStringList("Staffs." + staff.get(i) + ".description") : null;
             ItemStack head = Utility.getSkull(player, fileUtil.get().getString("Staffs." + staff.get(i) + ".prefix") + player.getName());
+            if(lore != null) {
+                String status = "&c&l█";
+                if(player.isOnline()) {
+                }
+                ItemMeta headMeta = head.getItemMeta();
+                for(int j = 0; j < lore.size(); j++) {
+                    lore.set(j, Utility.colorize(lore.get(j).replace("{status}", status)));
+                }
+                headMeta.setLore(lore);
+                head.setItemMeta(headMeta);
+            }
             builder.setItem(i + 1, head);
 
 

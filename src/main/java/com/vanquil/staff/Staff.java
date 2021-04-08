@@ -71,8 +71,13 @@ public final class Staff extends JavaPlugin {
         new StaffsCommand(this);
         new CPSCommand(this);
         new ReportCommand(this);
+        new ReportsCommand(this);
 
         // listeners
+        new OpenListener(this);
+        new CloseListener(this);
+        new HomeListener(this);
+        new CasesListener(this);
         new FreezeListener(this);
         new BlackListListener(this);
         new DeathListener(this);

@@ -33,9 +33,9 @@ public class MainCommand implements CommandExecutor {
         }
 
         if(sender instanceof Player) {
-            Utility.sendHelpPage((Player) sender);
+            Utility.sendHelpPage((Player) sender, label);
         } else {
-            Utility.sendHelpPage(sender);
+            Utility.sendHelpPage(sender, label);
         }
 
         return false;

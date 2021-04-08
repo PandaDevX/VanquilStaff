@@ -1,10 +1,12 @@
 package com.vanquil.staff.utility;
 
 import com.vanquil.staff.Staff;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class TeleportHandler {
 
@@ -30,17 +32,21 @@ public class TeleportHandler {
     }
 
     public void teleport() {
-        Location location = getLocation();
+        final Location location = getLocation();
         if (location == null) {
             this.player.sendTitle(Utility.colorize("&6&lRandom Teleport"), Utility.colorize("&cFailed to find a safe location"), 10, 70, 20);
             return;
         }
-        this.player.teleport(location);
-        if(world.getChunkAt((int)player.getLocation().getX(), (int)player.getLocation().getZ()).isLoaded()) {
-            this.player.sendTitle(Utility.colorize("&6&lRandom Teleport"), Utility.colorize("&aSuccessfully found a safe place for you"), 10, 70, 20);
+        if(!world.getChunkAt((int)location.getX(), (int) location.getZ()).isLoaded()) {
+            Bukkit.getScheduler().scheduleSyncDelayedTask(Staff.getInstance(), () -> world.getChunkAt((int)location.getX(), (int) location.getZ()).load());
         }
-
-        location = null;
+        player.sendTitle(Utility.colorize("&6&lRandom Teleport"), Utility.colorize("&aLooking for a safe place..."), 10, 70, 20);
+        new BukkitRunnable() {
+            public void run() {
+                player.teleport(location);
+                player.sendTitle(Utility.colorize("&6&lRandom Teleport"), Utility.colorize("&aSuccessfully found a safe place for you"), 10, 70, 20);
+            }
+        }.runTaskLater(Staff.getInstance(), 100L);
     }
 
     public int getX() {

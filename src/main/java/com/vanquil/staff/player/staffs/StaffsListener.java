@@ -1,6 +1,7 @@
 package com.vanquil.staff.player.staffs;
 
 import com.vanquil.staff.Staff;
+import com.vanquil.staff.gui.events.ClickEvent;
 import com.vanquil.staff.utility.Utility;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -15,11 +16,17 @@ public class StaffsListener implements Listener {
     @EventHandler
     public void onClick(InventoryClickEvent e) {
 
-        if(!Utility.stripColor(e.getView().getTitle()).equals("Staffs")) return;
-        if(e.getClickedInventory() == null) return;
-        if(e.getCurrentItem() == null) return;
-        if(!e.getCurrentItem().hasItemMeta()) return;
-
+        ClickEvent clickEvent = new ClickEvent(e);
+        if(!clickEvent.passed()) {
+            clickEvent = null;
+            return;
+        }
+        if(!clickEvent.getTitle().endsWith("Staffs")) {
+            clickEvent = null;
+            return;
+        }
         e.setCancelled(true);
+        clickEvent = null;
+        return;
     }
 }

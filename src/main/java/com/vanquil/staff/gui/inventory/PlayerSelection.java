@@ -20,6 +20,12 @@ public class PlayerSelection {
         List<Player> players = new ArrayList<>(Bukkit.getOnlinePlayers());
 
         PaginatedList paginatedList = new PaginatedList(players, 27);
+        if(page > paginatedList.getMaximumPage()) {
+            page = paginatedList.getMaximumPage();
+        }
+        if(page <= 0) {
+            page = 1;
+        }
         List<Player> availablePlayers = paginatedList.getPage(page);
 
         InventoryBuilder builder = new InventoryBuilder("&4Player Selection", 4);

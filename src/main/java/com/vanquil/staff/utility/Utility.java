@@ -437,46 +437,9 @@ public final class Utility {
 
     }
 
-    public static void sendHelpPage(Player player) {
+    public static void sendHelpPage(Player player, String label) {
         HashMap<String, String> descriptions = new HashMap<>();
-
-        descriptions.put("slowchat (seconds) &6or &8{ &c/chatslow &8}", "Slows chat");
-        descriptions.put("unslow", "Un slow chat");
-        descriptions.put("freeze [player / all]", "Freeze a player");
-        descriptions.put("falerts", "Listen to all censored chat");
-        descriptions.put("filter", "Disable or enable chat filtering");
-        descriptions.put("blacklist (player) (reason) [-p]", "Black list a player");
-        descriptions.put("revive &6or &8{ &c/invrestore &8}", "Restore lost inventory");
-        descriptions.put("vanish &6or &8{ &c/hidestaff, /v &8}", "Hide to other players");
-        descriptions.put("staffs &6or &8{ &c/stafflist,/slist &8}", "Staff list");
-        descriptions.put("cps &6or &8{ &c/cpsreport &8}", "Listen to all click per listeners over 1 minute period");
-        descriptions.put("report (player) (reason)", "Opens a menu to report a player");
-        descriptions.put("reports", "Lists of all the reports");
-        descriptions.put("vanquilstaff reload &6or &8{ &c/vs reload &8}", "Reload the config");
-        descriptions.put("vanquilstaff help &6or &8{ &c/vs help &8}", "Displays this");
-        descriptions.put("staff &6or &8{ &c/mod, /staffmode &8}", "Staff mode");
-        descriptions.put("adminmode &6or &8{ &c/am, /amode &8}", "Admin mode");
-        player.sendMessage(Utility.colorize("&a&lVanquil Staff &8>> &7Help Page"));
-        player.sendMessage("");
-        player.sendMessage(Utility.colorize("&a&lVanquil Staff &8>> &6[] - &fNot Required"));
-        player.sendMessage(Utility.colorize("&a&lVanquil Staff &8>> &6() - &fRequired"));
-        player.sendMessage("");
-        for (String key : descriptions.keySet()) {
-
-            TextComponent part1 = new TextComponent(TextComponent.fromLegacyText(Utility.colorize("&a&lVanquil &8>> ")));
-            TextComponent part2 = new TextComponent(TextComponent.fromLegacyText(Utility.colorize("&f/" + key)));
-            part2.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/" + key));
-            part2.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(descriptions.get(key)).color(net.md_5.bungee.api.ChatColor.YELLOW).create()));
-            player.spigot().sendMessage(part1, part2);
-
-            part1 = null;
-            part2 = null;
-        }
-        descriptions = null;
-    }
-
-    public static void sendHelpPage(CommandSender sender) {
-        HashMap<String, String> descriptions = new HashMap<>();
+        HashMap<String, String> aliases = new HashMap<>();
 
         descriptions.put("slowchat (seconds)", "Slows chat");
         descriptions.put("unslow", "Un slow chat");
@@ -490,19 +453,87 @@ public final class Utility {
         descriptions.put("cps", "Listen to all click per listeners over 1 minute period");
         descriptions.put("report (player) (reason)", "Opens a menu to report a player");
         descriptions.put("reports", "Lists of all the reports");
-        descriptions.put("vanquilstaff reload", "Reload the config");
-        descriptions.put("vanquilstaff help", "Displays this");
+        descriptions.put(label + " reload", "Reload the config");
+        descriptions.put(label + " help", "Displays this");
         descriptions.put("staff", "Staff mode");
         descriptions.put("adminmode", "Admin mode");
+
+        aliases.put("slowchat (seconds)", "&6or &8{ &c/chatslow &8}");
+        aliases.put("revive", "&6or &8{ &c/invrestore &8}");
+        aliases.put("vanish", "&6or &8{ &c/hidestaff, /v &8}");
+        aliases.put("staffs", "&6or &8{ &c/stafflist,/slist &8}");
+        aliases.put("cps", "&6or &8{ &c/cpsreport &8}");
+        aliases.put(label + " reload", "&6or &8{ &c/vs reload &8}");
+        aliases.put(label + " help", "&6or &8{ &c/vs help &8}");
+        aliases.put("staff", "&6or &8{ &c/mod, /staffmode &8}");
+        aliases.put("adminmode", "&6or &8{ &c/am, /amode &8}");
+
+        player.sendMessage(Utility.colorize("&a&lVanquil Staff &8>> &7Help Page"));
+        player.sendMessage("");
+        player.sendMessage(Utility.colorize("&a&lVanquil Staff &8>> &6[] - &fNot Required"));
+        player.sendMessage(Utility.colorize("&a&lVanquil Staff &8>> &6() - &fRequired"));
+        player.sendMessage("");
+        for (String key : descriptions.keySet()) {
+
+            TextComponent part1 = new TextComponent(TextComponent.fromLegacyText(Utility.colorize("&a&lVanquil &8>> ")));
+            TextComponent part2 = new TextComponent(TextComponent.fromLegacyText(Utility.colorize("&f/" + key)));
+            if(aliases.containsKey(key)) {
+                TextComponent textComponent = new TextComponent(TextComponent.fromLegacyText(" " + Utility.colorize(aliases.get(key))));
+                part2.addExtra(textComponent);
+            }
+            part2.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/" + key));
+            part2.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(descriptions.get(key)).color(net.md_5.bungee.api.ChatColor.YELLOW).create()));
+            player.spigot().sendMessage(part1, part2);
+
+            part1 = null;
+            part2 = null;
+        }
+        descriptions = null;
+        aliases = null;
+    }
+
+    public static void sendHelpPage(CommandSender sender, String label) {
+        HashMap<String, String> descriptions = new HashMap<>();
+        HashMap<String, String> aliases = new HashMap<>();
+
+        descriptions.put("slowchat (seconds)", "Slows chat");
+        descriptions.put("unslow", "Un slow chat");
+        descriptions.put("freeze [player / all]", "Freeze a player");
+        descriptions.put("falerts", "Listen to all censored chat");
+        descriptions.put("filter", "Disable or enable chat filtering");
+        descriptions.put("blacklist (player) (reason) [-p]", "Black list a player");
+        descriptions.put("revive", "Restore lost inventory");
+        descriptions.put("vanish", "Hide to other players");
+        descriptions.put("staffs", "Staff list");
+        descriptions.put("cps", "Listen to all click per listeners over 1 minute period");
+        descriptions.put("report (player) (reason)", "Opens a menu to report a player");
+        descriptions.put("reports", "Lists of all the reports");
+        descriptions.put(label + " reload", "Reload the config");
+        descriptions.put(label + " help", "Displays this");
+        descriptions.put("staff", "Staff mode");
+        descriptions.put("adminmode", "Admin mode");
+
+        aliases.put("slowchat (seconds)", "&6or &8{ &c/chatslow &8}");
+        aliases.put("revive", "&6or &8{ &c/invrestore &8}");
+        aliases.put("vanish", "&6or &8{ &c/hidestaff, /v &8}");
+        aliases.put("staffs", "&6or &8{ &c/stafflist,/slist &8}");
+        aliases.put("cps", "&6or &8{ &c/cpsreport &8}");
+        aliases.put(label + " reload", "&6or &8{ &c/vs reload &8}");
+        aliases.put(label + " help", "&6or &8{ &c/vs help &8}");
+        aliases.put("staff", "&6or &8{ &c/mod, /staffmode &8}");
+        aliases.put("adminmode", "&6or &8{ &c/am, /amode &8}");
 
         sender.sendMessage(Utility.colorize("&a&lVanquil Staff &8>> &7Help Page"));
         sender.sendMessage("");
         sender.sendMessage(Utility.colorize("&a&lVanquil Staff &8>> &6[] - &fNot Required"));
         sender.sendMessage(Utility.colorize("&a&lVanquil Staff &8>> &6() - &fRequired"));
         sender.sendMessage("");
-        for(String key : descriptions.keySet()) {
-            sender.sendMessage(Utility.colorize("&a&lVanquil &8>> &f/" + key + ":" + " " + descriptions.get(key)));
+        for (String key : descriptions.keySet()) {
+
+            String alias = aliases.getOrDefault(key, "");
+            sender.sendMessage(Utility.colorize("&a&lVanquil &8>> &f" + "/" + key + " " + alias + "&f: " + descriptions.get(key)));
         }
         descriptions = null;
+        aliases = null;
     }
 }

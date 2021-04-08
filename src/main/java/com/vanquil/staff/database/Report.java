@@ -1,8 +1,12 @@
 package com.vanquil.staff.database;
 
 import com.vanquil.staff.utility.Utility;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public class Report {
@@ -60,5 +64,25 @@ public class Report {
 
     public boolean isOpen() {
         return open;
+    }
+
+    public void save() {
+        ReportDatabase reportDatabase = new ReportDatabase();
+        reportDatabase.save(this);
+        reportDatabase = null;
+
+        for(Player player : Bukkit.getOnlinePlayers()) {
+            if(Utility.getStaffNames().contains(player.getName())) {
+                player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(Utility.colorize("&6Report>> &aNew report")));
+            }
+        }
+    }
+
+    public void setURL(String url) {
+        this.url = url;
+    }
+
+    public void setReason(String report) {
+        this.report = report;
     }
 }

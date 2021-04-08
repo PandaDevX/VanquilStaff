@@ -70,6 +70,7 @@ public final class Staff extends JavaPlugin {
         new VanishCommand(this);
         new StaffsCommand(this);
         new CPSCommand(this);
+        new ReportCommand(this);
 
         // listeners
         new FreezeListener(this);
@@ -80,6 +81,7 @@ public final class Staff extends JavaPlugin {
         new StaffJoin(this);
         new StaffQuit(this);
         new StaffAuth(this);
+        new ReportCreationListener(this);
 
 
         getLogger().info("Commands and Listeners loaded");
@@ -132,6 +134,9 @@ public final class Staff extends JavaPlugin {
         Storage.frozenPlayers.clear();
         Storage.filterAlerts.clear();
         Storage.playerSelection.clear();
+        Storage.playerReport.clear();
+        Storage.playerReportCoolDown.clear();
+        Storage.playerReportEditing.clear();
         getLogger().info("All storage are closed");
 
         DatabaseManager.disconnect();

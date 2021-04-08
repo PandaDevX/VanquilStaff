@@ -1,5 +1,6 @@
 package com.vanquil.staff.data;
 
+import com.vanquil.staff.database.Report;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
@@ -26,5 +27,7 @@ public final class Storage {
     public static HashMap<String, Integer> playerIndexPin = new HashMap<>();
     public static HashMap<String, Integer> staffAttempt = new HashMap<>();
     public static HashMap<String, String> playerSelection = new HashMap<>();
-
+    public static HashMap<String, Report> playerReport = new HashMap<>();
+    public static HashMap<String, String> playerReportEditing = new HashMap<>();
+    public static HashMap<String, Long> playerReportCoolDown = new HashMap<>();
 }

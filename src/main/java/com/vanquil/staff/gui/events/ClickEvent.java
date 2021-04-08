@@ -30,6 +30,7 @@ public class ClickEvent {
 
     public boolean passed() {
         if(e.getClickedInventory() == null) return false;
+        if(e.getClickedInventory() == e.getWhoClicked().getInventory()) return false;
         if(e.getCurrentItem() == null) return false;
         if(!e.getCurrentItem().hasItemMeta()) return false;
         if(name != null) {

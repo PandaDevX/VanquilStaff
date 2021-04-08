@@ -26,7 +26,7 @@ public class ReviveCommand implements CommandExecutor {
         }
         // check permission
 
-        if(!sender.hasPermission("inventory.revive")) {
+        if(!sender.hasPermission("player.revive")) {
             Utility.sendNoPermissionMessage(sender);
             return true;
         }

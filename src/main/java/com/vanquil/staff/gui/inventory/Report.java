@@ -4,7 +4,6 @@ import com.vanquil.staff.utility.InventoryBuilder;
 import com.vanquil.staff.utility.ItemBuilder;
 import com.vanquil.staff.utility.Utility;
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
@@ -12,7 +11,7 @@ public class Report {
 
     Inventory inventory = null;
 
-    public void setup(OfflinePlayer reportedPlayer, String reason) {
+    public void setup(com.vanquil.staff.database.Report report) {
 
         InventoryBuilder builder = new InventoryBuilder("&4Report", 3);
 
@@ -32,12 +31,12 @@ public class Report {
         builder.setItem(15, design3.createPlaceHolder());
         builder.setItem(17, design3.createPlaceHolder());
 
-        ItemBuilder head = new ItemBuilder(Utility.getSkull(reportedPlayer, "&6" + reportedPlayer.getName()));
+        ItemBuilder head = new ItemBuilder(Utility.getSkull(report.getReportedPlayer(), "&6" + report.getReportedPlayer().getName()));
         builder.setItem(12, head);
 
         ItemBuilder paper = new ItemBuilder(Material.PAPER);
         paper.setName("&eReason");
-        paper.setLore("", "&r" + reason);
+        paper.setLore("", "&r" + report.getReport());
 
         ItemBuilder url = new ItemBuilder(Material.HOPPER);
         url.setName("&eURL");

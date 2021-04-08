@@ -71,6 +71,7 @@ public class StaffExamineListener implements Listener {
 
     @EventHandler
     public void onClose(InventoryCloseEvent e) {
+        if(!e.getPlayer().hasPermission("staff.adminmode")) return;
         if(e.getInventory().equals(inventory)) {
             if(e.getInventory().getHolder() instanceof Player) {
                 Player player = (Player) e.getInventory().getHolder();

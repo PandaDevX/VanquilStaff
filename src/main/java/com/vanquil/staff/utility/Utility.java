@@ -337,7 +337,7 @@ public final class Utility {
         int maxX = 1000;
         int maxZ = 1000;
         TeleportRunnable teleportRunnable = new TeleportRunnable(player, world, maxX, maxZ);
-        Staff.getInstance().getServer().getScheduler().scheduleSyncDelayedTask(Staff.getInstance(), teleportRunnable);
+        teleportRunnable.run();
         teleportRunnable = null;
     }
 

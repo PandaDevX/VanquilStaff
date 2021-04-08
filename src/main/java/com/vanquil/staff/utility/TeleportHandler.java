@@ -37,16 +37,12 @@ public class TeleportHandler {
             this.player.sendTitle(Utility.colorize("&6&lRandom Teleport"), Utility.colorize("&cFailed to find a safe location"), 10, 70, 20);
             return;
         }
-        if(!world.getChunkAt((int)location.getX(), (int) location.getZ()).isLoaded()) {
-            Bukkit.getScheduler().scheduleSyncDelayedTask(Staff.getInstance(), () -> world.getChunkAt((int)location.getX(), (int) location.getZ()).load());
-        }
         player.sendTitle(Utility.colorize("&6&lRandom Teleport"), Utility.colorize("&aLooking for a safe place..."), 10, 70, 20);
-        new BukkitRunnable() {
-            public void run() {
-                player.teleport(location);
-                player.sendTitle(Utility.colorize("&6&lRandom Teleport"), Utility.colorize("&aSuccessfully found a safe place for you"), 10, 70, 20);
-            }
-        }.runTaskLater(Staff.getInstance(), 100L);
+        if(!world.getChunkAt((int)location.getX(), (int) location.getZ()).isLoaded()) {
+            world.getChunkAt((int)location.getX(), (int) location.getZ()).load();
+        }
+        player.teleport(location);
+        player.sendTitle(Utility.colorize("&6&lRandom Teleport"), Utility.colorize("&aSuccessfully teleported to a safe place"), 10, 70, 20);
     }
 
     public int getX() {

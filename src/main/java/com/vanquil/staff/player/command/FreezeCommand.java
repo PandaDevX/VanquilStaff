@@ -88,6 +88,7 @@ public class FreezeCommand implements CommandExecutor {
                 online.sendTitle(Utility.colorize("&6&lFreeze"), Utility.colorize("&aYou are no longer able to move"), 10, 70, 20);
 
             }
+
             return true;
         }
 
@@ -114,6 +115,8 @@ public class FreezeCommand implements CommandExecutor {
 
             // send alert
             target.sendTitle(Utility.colorize("&6&lFreeze"), Utility.colorize("&aYou are now able to move"), 10, 70, 20);
+
+            sender.sendMessage(Utility.colorize("&a&lVanquil Staff &8>> &7Successfully removed frozen spell to that player"));
             return true;
         }
 
@@ -122,6 +125,8 @@ public class FreezeCommand implements CommandExecutor {
 
         // send alert
         target.sendTitle(Utility.colorize("&6&lFreeze"), Utility.colorize("&aYou are no longer able to move"), 10, 70, 20);
+
+        sender.sendMessage(Utility.colorize("&a&lVanquil Staff &8>> &7Successfully added frozen spell to that player"));
 
         return false;
     }

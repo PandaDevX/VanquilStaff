@@ -63,10 +63,6 @@ public class OpenListener implements Listener {
             ReportDatabase reportDatabase = new ReportDatabase();
             reportDatabase.close(player, reason,date);
 
-
-            e.getWhoClicked().sendMessage(reason);
-            e.getWhoClicked().sendMessage(date);
-
             e.setCancelled(true);
 
             e.getClickedInventory().setItem(e.getSlot(), null);

@@ -10,12 +10,10 @@ import com.vanquil.staff.database.DatabaseManager;
 import com.vanquil.staff.database.PinDatabase;
 import com.vanquil.staff.player.command.*;
 import com.vanquil.staff.player.events.*;
-import com.vanquil.staff.player.staffs.StaffAuth;
-import com.vanquil.staff.player.staffs.StaffJoin;
-import com.vanquil.staff.player.staffs.StaffQuit;
-import com.vanquil.staff.player.staffs.StaffsListener;
+import com.vanquil.staff.player.staffs.*;
 import com.vanquil.staff.utility.FileUtil;
 import com.vanquil.staff.utility.Utility;
+import com.vanquil.staff.vanquilstaff.MainCommand;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -27,9 +25,6 @@ public final class Staff extends JavaPlugin {
 
     @Override
     public void onEnable() {
-
-        // logger
-        getLogger().info("Has been enabled");
 
         // instance of plugin
         instance = this;
@@ -72,8 +67,13 @@ public final class Staff extends JavaPlugin {
         new CPSCommand(this);
         new ReportCommand(this);
         new ReportsCommand(this);
+        new MainCommand(this);
+        new StaffModeCommand(this);
 
         // listeners
+        new StaffExamineListener(this);
+        new StaffPlayerSelectionListener(this);
+        new StaffModeListener(this);
         new OpenListener(this);
         new CloseListener(this);
         new HomeListener(this);
@@ -120,9 +120,6 @@ public final class Staff extends JavaPlugin {
     @Override
     public void onDisable() {
 
-        //logger
-        getLogger().info("Has been disabled");
-
         // close all storages
         Storage.staffAttempt.clear();
         Storage.playerIndexPin.clear();
@@ -142,6 +139,7 @@ public final class Staff extends JavaPlugin {
         Storage.playerReport.clear();
         Storage.playerReportCoolDown.clear();
         Storage.playerReportEditing.clear();
+        Storage.staffTool.clear();
         getLogger().info("All storage are closed");
 
         DatabaseManager.disconnect();

@@ -37,33 +37,7 @@ public class VanishCommand implements CommandExecutor {
 
         Player player = (Player) sender;
         // check if the player is already vanished
-        if(Storage.vanishedPlayers.contains(player.getUniqueId().toString())) {
-            if(plugin.getConfig().getBoolean("Staff Vanish.invisibility")) {
-                player.removePotionEffect(PotionEffectType.INVISIBILITY);
-            }
-            Storage.vanishedPlayers.remove(player.getUniqueId().toString());
-            for(Player online : Bukkit.getOnlinePlayers()) {
-                if(online.hasPermission("staff.vanish")) {
-                    continue;
-                }
-                online.showPlayer(plugin, player);
-            }
-            player.sendMessage(Utility.colorize(plugin.getConfig().getString("Staff Vanish.show-message")));
-            return true;
-        }
-
-        // vanish player
-        if(plugin.getConfig().getBoolean("Staff Vanish.invisibility")) {
-            player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 2147483647, 1, false));
-        }
-        Storage.vanishedPlayers.add(player.getUniqueId().toString());
-        for(Player online : Bukkit.getOnlinePlayers()) {
-            if(online.hasPermission("staff.vanish")) {
-                continue;
-            }
-            online.hidePlayer(plugin, player);
-        }
-        player.sendMessage(Utility.colorize(plugin.getConfig().getString("Staff Vanish.hide-message")));
+        Utility.vanishPlayer(player,plugin);
         return false;
     }
 }

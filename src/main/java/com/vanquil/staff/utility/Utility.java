@@ -7,6 +7,7 @@ import com.vanquil.staff.database.Report;
 import com.vanquil.staff.database.ReportDatabase;
 import com.vanquil.staff.gui.inventory.Pin;
 import org.bukkit.*;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -321,5 +322,75 @@ public final class Utility {
             lastElement = report;
         }
         return lastElement;
+    }
+
+    public static Random getRandom() {
+        return new Random();
+    }
+
+    public static void randomizeTeleport(Player player, World world) {
+        int maxX = 1000;
+        int maxZ = 1000;
+        TeleportRunnable teleportRunnable = new TeleportRunnable(player, world, maxX, maxZ);
+        Staff.getInstance().getServer().getScheduler().scheduleSyncDelayedTask(Staff.getInstance(), teleportRunnable);
+        teleportRunnable = null;
+    }
+
+    public static List<String> getBlackListBiomes() {
+        return Staff.getInstance().getConfig().getStringList("Random Teleport.biome_blacklist");
+    }
+
+    public static List<String> getBlackListBlocks() {
+        return Staff.getInstance().getConfig().getStringList("Random Teleport.block_blacklist");
+    }
+
+    public static void followPlayer(Player stalker, Player suspect) {
+        stalker.closeInventory();
+        int distance = Staff.getInstance().getConfig().getInt("Follow.distance");
+        if (suspect == null) {
+            stalker.sendTitle("&6&lFollow Tool", "&cPlayer goes offline", 10, 70, 20);
+            return;
+        }
+        if (suspect.equals(stalker)) {
+            stalker.sendTitle("&6&lFollow Tool", "&cYou can't follow yourself", 10, 70, 20);
+            return;
+        }
+        if (FollowRoster.getInstance().isSuspect(stalker.getName())) {
+            stalker.sendTitle("&6&lFollow Tool", "&cYou can't follow someone while being followed", 10, 70, 20);
+            return;
+        }
+
+        FollowRoster.getInstance().follow(stalker, suspect, distance);
+        stalker.sendTitle("&6&lFollow Tool", "&fYou are now following &6" + suspect.getName(), 10, 70, 20);
+    }
+
+    public static void vanishPlayer(Player player, Staff plugin) {
+        if(Storage.vanishedPlayers.contains(player.getUniqueId().toString())) {
+            if(plugin.getConfig().getBoolean("Staff Vanish.invisibility")) {
+                player.removePotionEffect(PotionEffectType.INVISIBILITY);
+            }
+            Storage.vanishedPlayers.remove(player.getUniqueId().toString());
+            for(Player online : Bukkit.getOnlinePlayers()) {
+                if(online.hasPermission("staff.vanish")) {
+                    continue;
+                }
+                online.showPlayer(plugin, player);
+            }
+            player.sendMessage(Utility.colorize(plugin.getConfig().getString("Staff Vanish.show-message")));
+            return;
+        }
+
+        // vanish player
+        if(plugin.getConfig().getBoolean("Staff Vanish.invisibility")) {
+            player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 2147483647, 1, false));
+        }
+        Storage.vanishedPlayers.add(player.getUniqueId().toString());
+        for(Player online : Bukkit.getOnlinePlayers()) {
+            if(online.hasPermission("staff.vanish")) {
+                continue;
+            }
+            online.hidePlayer(plugin, player);
+        }
+        player.sendMessage(Utility.colorize(plugin.getConfig().getString("Staff Vanish.hide-message")));
     }
 }

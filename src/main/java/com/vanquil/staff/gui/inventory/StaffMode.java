@@ -20,20 +20,24 @@ public class StaffMode {
         ItemBuilder examine = new ItemBuilder(Material.CHEST);
         examine.setName("&6Examine");
 
-        ItemBuilder freeze = new ItemBuilder(Material.SNOW_BLOCK);
+        ItemBuilder freeze = new ItemBuilder(Material.ICE);
         freeze.setName("&6Freeze Tool");
 
-        ItemBuilder follow = new ItemBuilder(Material.CREEPER_HEAD);
+        ItemBuilder follow = new ItemBuilder(Material.BLACK_BANNER);
         follow.setName("&6Follow Tool");
 
         ItemBuilder push = new ItemBuilder(Material.CREEPER_HEAD);
-        push.setLore("&6Push Forward");
+        push.setName("&6Push Forward");
+
+        ItemBuilder staffs = new ItemBuilder(Material.BELL);
+        staffs.setName("&6Staffs");
 
         builder.setItem(1, randomTP);
         builder.setItem(2, examine);
         builder.setItem(3, freeze);
         builder.setItem(4, follow);
         builder.setItem(5, push);
+        builder.setItem(6, staffs);
 
         inventory = builder.build();
 

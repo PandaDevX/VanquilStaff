@@ -30,4 +30,5 @@ public final class Storage {
     public static HashMap<String, Report> playerReport = new HashMap<>();
     public static HashMap<String, String> playerReportEditing = new HashMap<>();
     public static HashMap<String, Long> playerReportCoolDown = new HashMap<>();
+    public static HashMap<String, String> staffTool = new HashMap<>();
 }

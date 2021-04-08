@@ -71,3 +71,50 @@ Random Teleport:
 
    block_blacklist:
       - 'cactus'
+
+
+###
+##
+# Follow Tool
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#
+# significantDistance (default value is 0.1999)
+# The distance the followed player needs to move to trigger a relocation.
+# Number of meters expressed as a floating point.
+# Normal values will be between 0.10 and 0.22 (walking ~ 0.205 per update, YMMV).
+# Small numbers will cause allow you to catch slow walk or sneaking.
+# Larger numbers will allow you to ignore small changes, catch teleports and falling.
+#
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#
+# rotateHead (default value is false)
+# Specifies whether you want to always move follower's head to face the followed player.
+# This applies to the time within cool down period when followed player is still moving.
+# True means always rotate the head, and may be a bit jumpy at close following distance.
+# False means just stand still until the cool down period is expired.
+#
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#
+# followStyle (default value is 1)
+# Specifies which algorithm to use to find the new location while following.
+# Style 1 will use the follow distance strictly on the xz plane and find a
+#         safe y value along the line between the players
+# Style 2 will use the distance as a suggestion but will make adjustments
+#         in order to maintain clear line of sight on the followed player.
+#
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#
+# followDistance (default value is 15)
+# The distance to follow someone, if not specified on the command line.
+# Number of meters (blocks) expressed as a positive integer.
+# Normal values will range from 5 to 15.
+# Small numbers will cause you to follow very closely and will be harder to watch.
+# Larger numbers will allow you to follow at a long distance and will be easier to watch.
+#
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+Follow:
+   distance: 15
+   significantDistance: 0.1999
+   rotateHead: false
+   followStyle: 1

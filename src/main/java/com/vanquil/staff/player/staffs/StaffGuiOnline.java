@@ -34,9 +34,7 @@ public class StaffGuiOnline {
             List<String> lore =  fileUtil.get().get("Staffs." + staff.get(i) + ".description") != null ? fileUtil.get().getStringList("Staffs." + staff.get(i) + ".description") : null;
             ItemStack head = Utility.getSkull(player, fileUtil.get().getString("Staffs." + staff.get(i) + ".prefix") + player.getName());
             if(lore != null) {
-                String status = "&c&l█";
-                if(player.isOnline()) {
-                }
+                String status = "&a&l█";
                 ItemMeta headMeta = head.getItemMeta();
                 for(int j = 0; j < lore.size(); j++) {
                     lore.set(j, Utility.colorize(lore.get(j).replace("{status}", status)));

@@ -32,3 +32,9 @@ commands:
       description: report a player
    reports:
       description: list of all reports
+   vanquilstaff:
+      description: main command
+      aliases: [vs, vstaff]
+   staff:
+      description: staff mode
+      aliases: [mod, staffmode]

@@ -88,10 +88,7 @@ public class AuthRunnable implements Runnable {
                 Storage.staffAttempt.remove(e.getWhoClicked().getUniqueId().toString());
                 Storage.playerIndexPin.remove(e.getWhoClicked().getUniqueId().toString());
 
-                if(Storage.staffInventory.containsKey(e.getWhoClicked().getUniqueId().toString())) {
-                    e.getWhoClicked().getInventory().setContents(Storage.staffInventory.get(e.getWhoClicked().getUniqueId().toString()));
-                    Storage.staffInventory.remove(e.getWhoClicked().getUniqueId().toString());
-                }
+                Utility.loadInventory((Player) e.getWhoClicked());
                 ((Player) e.getWhoClicked()).sendTitle(Utility.colorize("&6Auth Pin"), Utility.colorize("&aSuccessfully logged in"), 10, 70, 20);
 
                 Storage.playerIndexPin.remove(e.getWhoClicked().getUniqueId().toString());

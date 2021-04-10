@@ -30,7 +30,7 @@ public class CPSCounter extends BukkitRunnable {
         for(OfflinePlayer listener : listeners) {
             if(listener.isOnline()) {
                 Set<OfflinePlayer> players = new HashSet<>();
-                for(String uuid : Storage.clicksCount.keySet()) {
+                for(String uuid : Storage.clicksCountRaw.keySet()) {
                     players.add(Bukkit.getOfflinePlayer(UUID.fromString(uuid)));
                 }
                 Iterator<OfflinePlayer> iterator = players.iterator();
@@ -40,11 +40,17 @@ public class CPSCounter extends BukkitRunnable {
                     && Storage.clicksCount.get(player.getUniqueId().toString()) > 0) {
                         if(Storage.clicksInterval.get(player.getUniqueId().toString()) <= System.currentTimeMillis()) {
                             Storage.clicksInterval.remove(player.getUniqueId().toString());
-                            int count = (Storage.clicksCount.get(player.getUniqueId().toString())/10);
-                            if(count == 0) {
-                                if((Storage.clicksCount.get(player.getUniqueId().toString())%10)>1)
-                                    count = 1;
+                            int count = 0;
+                            if(Storage.clicksCountRaw.get(player.getUniqueId().toString()).contains(",")) {
+                                for(String split : Storage.clicksCountRaw.get(player.getUniqueId().toString()).split(",")) {
+                                    count += Integer.parseInt(split);
+                                }
+                                count /= Storage.clicksCountRaw.get(player.getUniqueId().toString()).split(",").length;
+                            } else {
+                                count += Integer.parseInt(Storage.clicksCountRaw.get(player.getUniqueId().toString()));
                             }
+                            Storage.clicksCountRaw.remove(player.getUniqueId().toString());
+                            Storage.clicksCount.remove(player.getUniqueId().toString());
                             String color = count >= Staff.getInstance().getConfig().getInt("CPS.warning") ? Staff.getInstance().getConfig().getString("CPS.warning_prefix") : "&e";
                             if(count > 0) {
                                 listener.getPlayer().sendMessage(Utility.colorize("&c&lCPS>> &fPlayer &6" + player.getName() + " &c>> " + color + count + " click/second over 10 seconds"));

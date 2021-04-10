@@ -1,18 +1,13 @@
 package com.vanquil.staff.gui.inventory;
 
-import com.vanquil.staff.utility.InventoryBuilder;
 import com.vanquil.staff.utility.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 
 public class AdminMode {
 
-    Inventory inventory = null;
-
-    public void setup() {
-        InventoryBuilder builder = new InventoryBuilder("&4Admin Mode", 1);
+    public void setup(Player player) {
 
 
         ItemBuilder randomTP = new ItemBuilder(Material.HOPPER);
@@ -37,17 +32,17 @@ public class AdminMode {
         we.setName("&6WE Wand");
         we.setFlag(ItemFlag.HIDE_ATTRIBUTES);
 
-        builder.setItem(1, randomTP);
-        builder.setItem(2, examine);
-        builder.setItem(3, freeze);
-        builder.setItem(4, follow);
-        builder.setItem(5, push);
-        builder.setItem(6, staffs);
-        builder.setItem(7, we);
+        player.getInventory().setItem(0, randomTP.build());
+        player.getInventory().setItem(1, examine.build());
+        player.getInventory().setItem(2, freeze.build());
+        player.getInventory().setItem(3, follow.build());
+        player.getInventory().setItem(4, push.build());
+        player.getInventory().setItem(5, staffs.build());
+        player.getInventory().setItem(6, we.build());
 
-        inventory = builder.build();
+        player.updateInventory();
 
-        builder = null;
+
         randomTP = null;
         examine = null;
         freeze = null;
@@ -55,9 +50,5 @@ public class AdminMode {
         staffs = null;
         push = null;
         we = null;
-    }
-
-    public void openInventory(Player player) {
-        player.openInventory(inventory);
     }
 }

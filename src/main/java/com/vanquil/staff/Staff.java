@@ -72,8 +72,11 @@ public final class Staff extends JavaPlugin {
         new MainCommand(this);
         new StaffModeCommand(this);
         new AdminModeCommand(this);
+        new StaffLogsCommand(this);
+        new StaffHideCommand(this);
 
         // listeners
+        new StaffLogsListener(this);
         new AdminModeListener(this);
         new StaffExamineListener(this);
         new StaffPlayerSelectionListener(this);
@@ -127,8 +130,15 @@ public final class Staff extends JavaPlugin {
         // close all storages
         Storage.staffAttempt.clear();
         Storage.playerIndexPin.clear();
-        Storage.staffInventory.clear();
         Storage.playerInventory.clear();
+        Storage.playerExtras.clear();
+        Storage.playerArmors.clear();
+        Storage.staffMode.clear();
+        Storage.staffArmors.clear();
+        Storage.staffExtras.clear();
+        Storage.staffInventoryContents.clear();
+        Storage.staffLogger.clear();
+        Storage.hideStaffs.clear();
         Storage.cpsListeners.clear();
         Storage.clicksCount.clear();
         Storage.clicksInterval.clear();

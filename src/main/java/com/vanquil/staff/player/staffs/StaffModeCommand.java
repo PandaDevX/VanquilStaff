@@ -30,14 +30,32 @@ public class StaffModeCommand implements CommandExecutor {
 
         Player player = (Player) sender;
 
+        if(Storage.staffMode.contains(player.getUniqueId().toString())) {
+            Utility.vanishPlayerSilent(player, Staff.getInstance());
+            sender.sendMessage(Utility.colorize("&a&lVanquil StaffMode &8>> &7Disabled"));
+            player.getInventory().clear();
+            player.updateInventory();
+            Utility.loadInventoryStaff(player);
+
+            Storage.staffMode.remove(player.getUniqueId().toString());
+            return true;
+        }
+
         Storage.playerSelection.remove(player.getUniqueId().toString());
         Storage.staffTool.remove(player.getUniqueId().toString());
 
+
+        Utility.saveInventoryStaff(player);
+        player.getInventory().clear();
+        player.updateInventory();
+
+
         StaffMode staffMode = new StaffMode();
-        staffMode.setup();
-        staffMode.openInventory(player);
+        staffMode.setup(player);
+        Storage.staffMode.add(player.getUniqueId().toString());
 
         Utility.vanishStaff(player, Staff.getInstance());
+        sender.sendMessage(Utility.colorize("&a&lVanquil StaffMode &8>> &7Enabled"));
 
         staffMode = null;
         player = null;

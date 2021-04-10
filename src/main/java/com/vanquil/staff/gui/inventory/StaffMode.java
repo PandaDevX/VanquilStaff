@@ -8,10 +8,8 @@ import org.bukkit.inventory.Inventory;
 
 public class StaffMode {
 
-    Inventory inventory = null;
 
-    public void setup() {
-        InventoryBuilder builder = new InventoryBuilder("&4Staff Mode", 1);
+    public void setup(Player player) {
 
 
         ItemBuilder randomTP = new ItemBuilder(Material.HOPPER);
@@ -32,24 +30,17 @@ public class StaffMode {
         ItemBuilder staffs = new ItemBuilder(Material.DISPENSER);
         staffs.setName("&6Staffs");
 
-        builder.setItem(1, randomTP);
-        builder.setItem(2, examine);
-        builder.setItem(3, freeze);
-        builder.setItem(4, follow);
-        builder.setItem(5, push);
-        builder.setItem(6, staffs);
+        player.getInventory().setItem(0, randomTP.build());
+        player.getInventory().setItem(1, examine.build());
+        player.getInventory().setItem(2, freeze.build());
+        player.getInventory().setItem(3, follow.build());
+        player.getInventory().setItem(4, push.build());
+        player.getInventory().setItem(5, staffs.build());
 
-        inventory = builder.build();
-
-        builder = null;
         randomTP = null;
         examine = null;
         freeze = null;
         follow = null;
         push = null;
-    }
-
-    public void openInventory(Player player) {
-        player.openInventory(inventory);
     }
 }

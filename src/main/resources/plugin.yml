@@ -21,7 +21,7 @@ commands:
       aliases: [invrestore]
    vanish:
       description: allow you to hide
-      aliases: [v, hidestaff]
+      aliases: [v]
    staffs:
       description: check all available staffs
       aliases: [slist, stafflist]
@@ -41,3 +41,8 @@ commands:
    adminmode:
       description: admin mode
       aliases: [am, amode]
+   hidestaff:
+      description: Hides all staff
+   logs:
+      description: Vanquilstaff logger
+      aliases: [notifications]

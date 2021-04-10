@@ -47,10 +47,7 @@ public class StaffAuth implements Listener {
         if(!e.getView().getTitle().endsWith("Pin")) return;
 
         if(pinDatabase.isLoggedIn()) {
-            if(Storage.staffInventory.containsKey(e.getPlayer().getUniqueId().toString())) {
-                e.getPlayer().getInventory().setContents(Storage.staffInventory.get(e.getPlayer().getUniqueId().toString()));
-                Storage.staffInventory.remove(e.getPlayer().getUniqueId().toString());
-            }
+            Utility.restoreInventory((Player) e.getPlayer());
             e.getPlayer().sendMessage(Utility.colorize("&6&lAuth Pin, &aSuccessfully logged in"));
 
             Storage.playerIndexPin.remove(e.getPlayer().getUniqueId().toString());

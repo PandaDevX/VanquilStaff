@@ -21,6 +21,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -190,10 +191,6 @@ public final class Utility {
         player.getInventory().setContents(contents);
     }
 
-    public static void saveInventory(Player player) {
-        Storage.playerInventory.put(player.getUniqueId().toString(), player.getInventory().getContents());
-    }
-
     public static ItemStack getSkull(OfflinePlayer player, String displayName, String... lore) {
 
         boolean isNewVersion = Arrays.stream(Material.values())
@@ -288,8 +285,9 @@ public final class Utility {
         if(pinDatabase.isLoggedIn()) return;
 
 
-        Storage.staffInventory.put(player.getUniqueId().toString(), player.getInventory().getContents());
+        saveInventory(player);
         player.getInventory().clear();
+        player.updateInventory();
 
 
 
@@ -322,6 +320,123 @@ public final class Utility {
             }
             online.hidePlayer(Staff.getInstance(), player);
         }
+    }
+
+    public static void saveInventory(Player player) {
+        if(!emptyInventory(player.getInventory())) {
+
+            // save player inventory
+            try {
+                Storage.playerInventory.put(player.getUniqueId().toString(), player.getInventory().getStorageContents());
+            }catch (NoSuchMethodError ex) {
+                Storage.playerInventory.put(player.getUniqueId().toString(), player.getInventory().getContents());
+            }
+        }
+
+        if(!emptyArmors(player.getInventory())) {
+            Storage.playerArmors.put(player.getUniqueId().toString(), player.getInventory().getArmorContents());
+        }
+
+
+        if(!isOldVersion(player.getInventory())) {
+            Storage.playerExtras.put(player.getUniqueId().toString(), player.getInventory().getExtraContents());
+        }
+    }
+
+    public static void saveInventoryStaff(Player player) {
+        if(!emptyInventory(player.getInventory())) {
+
+            // save player inventory
+            try {
+                Storage.staffInventoryContents.put(player.getUniqueId().toString(), player.getInventory().getStorageContents());
+            }catch (NoSuchMethodError ex) {
+                Storage.staffInventoryContents.put(player.getUniqueId().toString(), player.getInventory().getContents());
+            }
+        }
+
+        if(!emptyArmors(player.getInventory())) {
+            Storage.staffArmors.put(player.getUniqueId().toString(), player.getInventory().getArmorContents());
+        }
+
+
+        if(!isOldVersion(player.getInventory())) {
+            Storage.staffExtras.put(player.getUniqueId().toString(), player.getInventory().getExtraContents());
+        }
+    }
+    public static void loadInventoryStaff(Player player) {
+        if(!Storage.staffInventoryContents.containsKey(player.getUniqueId().toString()) && !Storage.staffExtras.containsKey(player.getUniqueId().toString()) && !Storage.staffArmors.containsKey(player.getUniqueId().toString())) {
+            return;
+        }
+        if(Storage.staffInventoryContents.containsKey(player.getUniqueId().toString())) {
+            try {
+                player.getInventory().setStorageContents(Storage.staffInventoryContents.get(player.getUniqueId().toString()));
+            }catch (NoSuchMethodError e) {
+                player.getInventory().setContents(Storage.staffInventoryContents.get(player.getUniqueId().toString()));
+            }
+            Storage.staffInventoryContents.remove(player.getUniqueId().toString());
+        }
+        if(Storage.staffArmors.containsKey(player.getUniqueId().toString())) {
+            player.getInventory().setArmorContents(Storage.staffArmors.get(player.getUniqueId().toString()));
+            Storage.staffArmors.remove(player.getUniqueId().toString());
+        }
+        if(!isOldVersion(player.getInventory())) {
+            if(Storage.staffExtras.containsKey(player.getUniqueId().toString())) {
+                player.getInventory().setExtraContents(Storage.staffExtras.get(player.getUniqueId().toString()));
+                Storage.staffExtras.remove(player.getUniqueId().toString());
+            }
+        }
+        player.updateInventory();
+    }
+
+    public static void loadInventory(Player player) {
+        if(!Storage.playerInventory.containsKey(player.getUniqueId().toString()) && !Storage.playerExtras.containsKey(player.getUniqueId().toString()) && !Storage.playerArmors.containsKey(player.getUniqueId().toString())) {
+            return;
+        }
+            if(Storage.playerInventory.containsKey(player.getUniqueId().toString())) {
+            try {
+                player.getInventory().setStorageContents(Storage.playerInventory.get(player.getUniqueId().toString()));
+            }catch (NoSuchMethodError e) {
+                player.getInventory().setContents(Storage.playerInventory.get(player.getUniqueId().toString()));
+            }
+            Storage.playerInventory.remove(player.getUniqueId().toString());
+        }
+        if(Storage.playerArmors.containsKey(player.getUniqueId().toString())) {
+            player.getInventory().setArmorContents(Storage.playerArmors.get(player.getUniqueId().toString()));
+            Storage.playerArmors.remove(player.getUniqueId().toString());
+        }
+        if(!isOldVersion(player.getInventory())) {
+            if(Storage.playerExtras.containsKey(player.getUniqueId().toString())) {
+                player.getInventory().setExtraContents(Storage.playerExtras.get(player.getUniqueId().toString()));
+                Storage.playerExtras.remove(player.getUniqueId().toString());
+            }
+        }
+        player.updateInventory();
+    }
+
+    private static boolean emptyInventory(PlayerInventory inventory) {
+        for(ItemStack item : inventory.getContents())
+        {
+            if(item != null)
+                return false;
+        }
+        return true;
+    }
+
+    private static boolean emptyArmors(PlayerInventory inventory) {
+        for(ItemStack item : inventory.getArmorContents()) {
+            if(item != null)
+                return false;
+        }
+        return true;
+    }
+
+    private static boolean isOldVersion(PlayerInventory inventory) {
+        try {
+            inventory.getExtraContents();
+        }catch (NoSuchMethodError e) {
+            return true;
+        }
+        return false;
     }
 
     public static void showWrongInfo(Inventory inventory, int slot) {
@@ -569,6 +684,34 @@ public final class Utility {
         player.sendMessage(Utility.colorize(plugin.getConfig().getString("Staff Vanish.hide-message")));
     }
 
+    public static void vanishPlayerSilent(Player player, Staff plugin) {
+        if(Storage.vanishedPlayers.contains(player.getUniqueId().toString())) {
+            if(plugin.getConfig().getBoolean("Staff Vanish.invisibility")) {
+                player.removePotionEffect(PotionEffectType.INVISIBILITY);
+            }
+            Storage.vanishedPlayers.remove(player.getUniqueId().toString());
+            for(Player online : Bukkit.getOnlinePlayers()) {
+                if(online.hasPermission("staff.vanish")) {
+                    continue;
+                }
+                online.showPlayer(plugin, player);
+            }
+            return;
+        }
+
+        // vanish player
+        if(plugin.getConfig().getBoolean("Staff Vanish.invisibility")) {
+            player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 2147483647, 1, false));
+        }
+        Storage.vanishedPlayers.add(player.getUniqueId().toString());
+        for(Player online : Bukkit.getOnlinePlayers()) {
+            if(online.hasPermission("staff.vanish")) {
+                continue;
+            }
+            online.hidePlayer(plugin, player);
+        }
+    }
+
 
     public static void vanishStaff(Player player, Staff plugin) {
         if(Storage.vanishedPlayers.contains(player.getUniqueId().toString())) {
@@ -627,7 +770,10 @@ public final class Utility {
         descriptions.put(label + " help", "Displays this");
         descriptions.put("staff", "Staff mode");
         descriptions.put("adminmode", "Admin mode");
+        descriptions.put("hidestaff", "Hide all staffs");
+        descriptions.put("logs", "Vanquil Staff logger");
 
+        aliases.put("logs", "&6or &8{ &c/notifications &8}");
         aliases.put("slowchat (seconds)", "&6or &8{ &c/chatslow &8}");
         aliases.put("revive", "&6or &8{ &c/invrestore &8}");
         aliases.put("vanish", "&6or &8{ &c/hidestaff, /v &8}");
@@ -682,10 +828,13 @@ public final class Utility {
         descriptions.put(label + " help", "Displays this");
         descriptions.put("staff", "Staff mode");
         descriptions.put("adminmode", "Admin mode");
+        descriptions.put("hidestaff", "Hide all staffs");
+        descriptions.put("logs", "Vanquil Staff logger");
 
+        aliases.put("logs", "&6or &8{ &c/notifications &8}");
         aliases.put("slowchat (seconds)", "&6or &8{ &c/chatslow &8}");
         aliases.put("revive", "&6or &8{ &c/invrestore &8}");
-        aliases.put("vanish", "&6or &8{ &c/hidestaff, /v &8}");
+        aliases.put("vanish", "&6or &8{ &c/v &8}");
         aliases.put("staffs", "&6or &8{ &c/stafflist,/slist &8}");
         aliases.put("cps", "&6or &8{ &c/cpsreport &8}");
         aliases.put(label + " reload", "&6or &8{ &c/vs reload &8}");

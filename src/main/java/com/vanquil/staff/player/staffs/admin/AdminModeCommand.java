@@ -28,17 +28,35 @@ public class AdminModeCommand implements CommandExecutor {
             return true;
         }
 
+
         Player player = (Player) sender;
+
+        if(Storage.staffMode.contains(player.getUniqueId().toString())) {
+            Utility.vanishPlayerSilent(player, Staff.getInstance());
+            sender.sendMessage(Utility.colorize("&a&lVanquil AdminMode &8>> &7Disabled"));
+            player.getInventory().clear();
+            player.updateInventory();
+
+            Utility.loadInventoryStaff(player);
+
+            Storage.staffMode.remove(player.getUniqueId().toString());
+            return true;
+        }
 
         Storage.playerSelection.remove(player.getUniqueId().toString());
         Storage.staffTool.remove(player.getUniqueId().toString());
 
+        Utility.saveInventoryStaff(player);
+        player.getInventory().clear();
+        player.updateInventory();
+
         AdminMode staffMode = new AdminMode();
-        staffMode.setup();
-        staffMode.openInventory(player);
+        staffMode.setup(player);
 
         Utility.vanishStaff(player, Staff.getInstance());
 
+        Storage.staffMode.add(player.getUniqueId().toString());
+        sender.sendMessage(Utility.colorize("&a&lVanquil AdminMode &8>> &7Enabled"));
         staffMode = null;
         player = null;
         return false;

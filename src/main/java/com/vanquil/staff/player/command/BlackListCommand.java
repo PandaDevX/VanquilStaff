@@ -33,6 +33,11 @@ public class BlackListCommand implements CommandExecutor {
             return true;
         }
 
+        if(args[0].equalsIgnoreCase(sender.getName())) {
+            sender.sendMessage(Utility.colorize("&c&lHey &fyou can't target yourself"));
+            return true;
+        }
+
         OfflinePlayer target = Bukkit.getOfflinePlayer(args[0]);
         if(target.isOnline()) {
             target.getPlayer().kickPlayer(Utility.colorize("&c&lHey &fyou have been added to blacklist players"));

@@ -33,7 +33,7 @@ public class SlowChatCommand implements CommandExecutor {
         // check if argument given is number
 
         if(!Utility.isInt(args[0])) {
-            sender.sendMessage(Utility.colorize("&c&lArgument &fgiven must be a number"));
+            sender.sendMessage(Utility.colorize("&a&lVanquil &8>>&c&lArgument &fgiven must be a number"));
             return true;
         }
 
@@ -43,7 +43,7 @@ public class SlowChatCommand implements CommandExecutor {
         Storage.defaultCD.put("vanquil", Integer.parseInt(args[0]));
 
         // send succeeding message
-        sender.sendMessage(Utility.colorize("&aSuccessfully changed chat interval to &6" + Storage.defaultCD.get("vanquil") + " &asecond(s)"));
+        sender.sendMessage(Utility.colorize("&a&lVanquil &8>>&aSuccessfully changed chat interval to &6" + Storage.defaultCD.get("vanquil") + " &asecond(s)"));
         return false;
     }
 }

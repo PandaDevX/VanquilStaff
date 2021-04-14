@@ -27,7 +27,7 @@ public class FilterAlertCommand implements CommandExecutor {
 
         // check if player
         if(!(sender instanceof Player)) {
-            sender.sendMessage(Utility.colorize("&c&lHey &fyou must be a player to do that"));
+            sender.sendMessage(Utility.colorize("&a&lVanquil &8>> &fyou must be a player to do that"));
             return true;
         }
 
@@ -38,7 +38,7 @@ public class FilterAlertCommand implements CommandExecutor {
 
             // disable alerts
             Storage.filterAlerts.remove(player.getUniqueId().toString());
-            player.sendMessage(Utility.colorize("&cDisabled filter alerts"));
+            player.sendMessage(Utility.colorize("&a&lVanquil &8>>&cDisabled filter alerts"));
             return true;
         }
 
@@ -46,7 +46,7 @@ public class FilterAlertCommand implements CommandExecutor {
         Storage.filterAlerts.add(player.getUniqueId().toString());
 
         // send message
-        player.sendMessage(Utility.colorize("&aEnabled filter alerts"));
+        player.sendMessage(Utility.colorize("&a&lVanquil &8>>&aEnabled filter alerts"));
         return false;
     }
 }

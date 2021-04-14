@@ -9,6 +9,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 
 public class CPSListener implements Listener {
     public CPSListener(Staff plugin) {
@@ -17,6 +18,11 @@ public class CPSListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onListen(PlayerInteractEvent e) {
+        try {
+            if (e.getHand() == EquipmentSlot.OFF_HAND) return;
+        }catch (NoSuchMethodError ex) {
+
+        }
         if(Storage.cpsListeners.isEmpty()) {
             Storage.nextClick.remove(e.getPlayer().getUniqueId().toString());
             Storage.clicksCount.remove(e.getPlayer().getUniqueId().toString());

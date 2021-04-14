@@ -35,14 +35,14 @@ public class FilterCommand implements CommandExecutor {
             // disable
             fileUtil.get().set("Enable", false);
             fileUtil.save();
-            sender.sendMessage(Utility.colorize("&aSuccessfully disabled filter system"));
+            sender.sendMessage(Utility.colorize("&a&lVanquil &8>>&aSuccessfully disabled filter system"));
             return true;
         }
 
         // enable
         fileUtil.get().set("Enable", true);
         fileUtil.save();
-        sender.sendMessage(Utility.colorize("&aSuccessfully enabled filter system"));
+        sender.sendMessage(Utility.colorize("&a&lVanquil &8>>&aSuccessfully enabled filter system"));
 
         // close storage
         fileUtil = null;

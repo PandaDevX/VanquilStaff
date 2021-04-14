@@ -29,7 +29,7 @@ public class ReportCommand implements CommandExecutor {
         }
 
         if(!(sender instanceof Player)) {
-            sender.sendMessage(Utility.colorize("&c&lHey &fyou must be a player to do that"));
+            sender.sendMessage(Utility.colorize("&a&lVanquil &8>> &fyou must be a player to do that"));
             return true;
         }
         // check if still has cool down
@@ -39,7 +39,7 @@ public class ReportCommand implements CommandExecutor {
 
                 if (Storage.playerReportCoolDown.get(player.getUniqueId().toString()) > System.currentTimeMillis()) {
 
-                    player.sendMessage(Utility.colorize("&c&lHey &fyou can only send report every &62 minutes"));
+                    player.sendMessage(Utility.colorize("&a&lVanquil &8>> &fyou can only send report every &62 minutes"));
                     return true;
                 }
             }
@@ -51,7 +51,7 @@ public class ReportCommand implements CommandExecutor {
         OfflinePlayer reportedPlayer = Bukkit.getOfflinePlayer(args[0]);
 
         if(!reportedPlayer.hasPlayedBefore()) {
-            sender.sendMessage(Utility.colorize("&c&lHey &fthat player did not play here before"));
+            sender.sendMessage(Utility.colorize("&a&lVanquil &8>> &fthat player did not play here before"));
             return true;
         }
 

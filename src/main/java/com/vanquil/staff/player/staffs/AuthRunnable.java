@@ -84,7 +84,7 @@ public class AuthRunnable implements Runnable {
             int current = Storage.staffAttempt.getOrDefault(e.getWhoClicked().getUniqueId().toString(), 0);
 
             if(current == (Staff.getInstance().getConfig().getInt("Auth Pin.max_attempt") - 1)) {
-                ((Player) e.getWhoClicked()).kickPlayer(Utility.colorize("&c&lHey &fYou reached the maximum amount of attempts"));
+                ((Player) e.getWhoClicked()).kickPlayer(Utility.colorize("&a&lVanquil &8>> &fYou reached the maximum amount of attempts"));
                 Storage.staffAttempt.remove(e.getWhoClicked().getUniqueId().toString());
                 Storage.playerIndexPin.remove(e.getWhoClicked().getUniqueId().toString());
 

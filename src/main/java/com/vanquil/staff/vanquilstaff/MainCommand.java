@@ -22,7 +22,7 @@ public class MainCommand implements CommandExecutor {
             return true;
         }
         if(args.length == 0) {
-            Utility.sendCorrectArgument(sender, label + " <help / reload>");
+            Utility.sendCorrectArgument(sender, label + " <help,? / reload>");
             return true;
         }
 
@@ -31,11 +31,17 @@ public class MainCommand implements CommandExecutor {
             sender.sendMessage(Utility.colorize("&a&lVanquil &8>> &fConfig &7reloaded successfully"));
             return true;
         }
+        int page = 1;
+        if(args.length == 2) {
+            if(Utility.isInt(args[1])) {
+                page = Integer.parseInt(args[1]);
+            }
+        }
 
         if(sender instanceof Player) {
-            Utility.sendHelpPage((Player) sender, label);
+            Utility.sendHelpPage((Player) sender,page, label, args[0]);
         } else {
-            Utility.sendHelpPage(sender, label);
+            Utility.sendHelpPage(sender,page, label, args[0]);
         }
 
         return false;

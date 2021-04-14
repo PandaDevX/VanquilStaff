@@ -48,7 +48,7 @@ public class StaffAuth implements Listener {
 
         if(pinDatabase.isLoggedIn()) {
             Utility.restoreInventory((Player) e.getPlayer());
-            e.getPlayer().sendMessage(Utility.colorize("&6&lAuth Pin, &aSuccessfully logged in"));
+            e.getPlayer().sendMessage(Utility.colorize("&a&lVanquil &8>> &aSuccessfully logged in"));
 
             Storage.playerIndexPin.remove(e.getPlayer().getUniqueId().toString());
             return;

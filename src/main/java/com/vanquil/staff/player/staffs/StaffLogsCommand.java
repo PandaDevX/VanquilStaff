@@ -24,7 +24,7 @@ public class StaffLogsCommand implements CommandExecutor {
         }
 
         if(!(sender instanceof Player)) {
-            sender.sendMessage(Utility.colorize("&c&lHey &fyou must be a player to do that"));
+            sender.sendMessage(Utility.colorize("&a&lVanquil &8>> &fyou must be a player to do that"));
             return true;
         }
 

@@ -32,7 +32,7 @@ public class UnSlowChatCommand implements CommandExecutor {
         Storage.defaultCD.remove("vanquil");
 
         // send succeeding message
-        sender.sendMessage(Utility.colorize("&aSuccessfully changed chat interval to &6default"));
+        sender.sendMessage(Utility.colorize("&a&lVanquil &8>>&aSuccessfully changed chat interval to &6default"));
         return false;
     }
 }

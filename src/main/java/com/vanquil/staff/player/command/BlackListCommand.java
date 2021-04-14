@@ -34,18 +34,18 @@ public class BlackListCommand implements CommandExecutor {
         }
 
         if(args[0].equalsIgnoreCase(sender.getName())) {
-            sender.sendMessage(Utility.colorize("&c&lHey &fyou can't target yourself"));
+            sender.sendMessage(Utility.colorize("&a&lVanquil &8>> &fyou can't target yourself"));
             return true;
         }
 
         OfflinePlayer target = Bukkit.getOfflinePlayer(args[0]);
         if(target.isOnline()) {
-            target.getPlayer().kickPlayer(Utility.colorize("&c&lHey &fyou have been added to blacklist players"));
+            target.getPlayer().kickPlayer(Utility.colorize("&a&lVanquil &8>> &fyou have been added to blacklist players"));
             return true;
         }
 
         if(target.hasPlayedBefore()) {
-            sender.sendMessage(Utility.colorize("&c&lBlacklist &fPlayer &c" + args[0] + " &fdid not play the server before"));
+            sender.sendMessage(Utility.colorize("&a&lVanquil &8>> &fPlayer &c" + args[0] + " &fdid not play the server before"));
             return true;
         }
 
@@ -61,13 +61,13 @@ public class BlackListCommand implements CommandExecutor {
             Storage.blackListPlayers.put(target.getUniqueId().toString(), reason);
 
             for(Player player : Bukkit.getOnlinePlayers()) {
-                player.sendMessage(Utility.colorize("&c&lBlacklist &fPlayer &6" + target.getName() + " &fhas been added to blacklist players for > &6" + reason));
+                player.sendMessage(Utility.colorize("&a&lVanquil &8>> &fPlayer &6" + target.getName() + " &fhas been added to blacklist players for > &6" + reason));
             }
             return true;
         }
         // add to black list
         Storage.blackListPlayers.put(target.getUniqueId().toString(), reason);
-        sender.sendMessage(Utility.colorize("&c&lBlacklist &fPlayer &6" + target.getName() + " &fhas been added to blacklist players for > &6" + reason));
+        sender.sendMessage(Utility.colorize("&a&lVanquil &8>> &fPlayer &6" + target.getName() + " &fhas been added to blacklist players for > &6" + reason));
         return false;
     }
 }

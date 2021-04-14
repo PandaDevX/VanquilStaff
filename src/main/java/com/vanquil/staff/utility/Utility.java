@@ -2,6 +2,7 @@ package com.vanquil.staff.utility;
 
 import com.vanquil.staff.Staff;
 import com.vanquil.staff.data.Storage;
+import com.vanquil.staff.database.DatabaseManager;
 import com.vanquil.staff.database.PinDatabase;
 import com.vanquil.staff.database.Report;
 import com.vanquil.staff.database.ReportDatabase;
@@ -280,6 +281,7 @@ public final class Utility {
     }
 
     public static void auth(Player player) {
+        if(DatabaseManager.getConnection() == null) return;
         PinDatabase pinDatabase = new PinDatabase(player);
         final String type = pinDatabase.isRegistered() ? "login" : "register";
         if(pinDatabase.isLoggedIn()) return;
@@ -320,6 +322,37 @@ public final class Utility {
             }
             online.hidePlayer(Staff.getInstance(), player);
         }
+    }
+
+    public static void sendStaffHelp(Player player) {
+        String[] help = {
+                colorize("&8===== &a&lVanquil Staff Mode &8====="),
+                "",
+                colorize("&6&lRandom Teleport &7>> &fUse to teleport safe random location"),
+                colorize("&6&lExamine &7>> &fUse to examine players' inventory"),
+                colorize("&6&lFreeze Tool &7>> &fUse to freeze players"),
+                colorize("&6&lFollow Tool &7>> &fUse to follow player and stay behind"),
+                colorize("&6&lPush Forward &7>> &fUse to push player forward to where they are facing"),
+                colorize("&6&lStaffs &7>> &fUse to see all online staffs"),
+                "",
+                colorize("&6&l/staff &7>> &fCommand to enable or disable staff mode")};
+        player.sendMessage(help);
+    }
+
+    public static void sendAdminHelp(Player player) {
+        String[] help = {
+                colorize("&8===== &a&lVanquil Staff Mode &8====="),
+                "",
+                colorize("&6&lRandom Teleport &7>> &fUse to teleport safe random location"),
+                colorize("&6&lExamine &7>> &fUse to examine players' inventory and edit"),
+                colorize("&6&lFreeze Tool &7>> &fUse to freeze players"),
+                colorize("&6&lFollow Tool &7>> &fUse to follow player and stay behind"),
+                colorize("&6&lPush Forward &7>> &fUse to push player forward to where they are facing"),
+                colorize("&6&lStaffs &7>> &fUse to see all online staffs"),
+                colorize("&6&lWE Wand &7>> &fUse to claim worldedit wand"),
+                "",
+                colorize("&6&l/adminmode &7>> &fCommand to enable or disable admin mode")};
+        player.sendMessage(help);
     }
 
     public static void saveInventory(Player player) {
@@ -750,107 +783,131 @@ public final class Utility {
 
     }
 
-    public static void sendHelpPage(Player player, String label) {
+    public static void sendHelpPage(Player player, int page, String label, String argument) {
         HashMap<String, String> descriptions = new HashMap<>();
         HashMap<String, String> aliases = new HashMap<>();
 
-        descriptions.put("slowchat (seconds)", "Slows chat");
-        descriptions.put("unslow", "Un slow chat");
-        descriptions.put("freeze [player / -all]", "Freeze a player");
-        descriptions.put("falerts", "Listen to all censored chat");
-        descriptions.put("filter", "Disable or enable chat filtering");
-        descriptions.put("blacklist (player) (reason) [-p]", "Black list a player");
-        descriptions.put("revive", "Restore lost inventory");
-        descriptions.put("vanish", "Hide to other players");
-        descriptions.put("staffs", "Staff list");
-        descriptions.put("cps", "Listen to all click per listeners over 1 minute period");
-        descriptions.put("report (player) (reason)", "Opens a menu to report a player");
-        descriptions.put("reports", "Lists of all the reports");
-        descriptions.put(label + " reload", "Reload the config");
-        descriptions.put(label + " help", "Displays this");
-        descriptions.put("staff", "Staff mode");
-        descriptions.put("adminmode", "Admin mode");
-        descriptions.put("hidestaff", "Hide all staffs");
-        descriptions.put("logs", "Vanquil Staff logger");
+        descriptions.put(label + " help,? (page)", "displays the menu");
+        descriptions.put("slowchat (seconds)", "slows chat");
+        descriptions.put("unslow", "unslow chat");
+        descriptions.put("freeze [player / -all]", "freeze a player");
+        descriptions.put("falerts", "listen to all censored chat");
+        descriptions.put("filter", "disable or enable chat filtering");
+        descriptions.put("blacklist (player) (reason) [-p]", "black list a player");
+        descriptions.put("revive", "restore lost inventory");
+        descriptions.put("vanish", "hide to other players");
+        descriptions.put("staffs", "staff list");
+        descriptions.put("cps", "listen to all click per listeners over 1 minute period");
+        descriptions.put("report (player) (reason)", "opens a menu to report a player");
+        descriptions.put("reports", "lists of all the reports");
+        descriptions.put(label + " reload", "reload the config");
+        descriptions.put("staff", "staff mode");
+        descriptions.put("adminmode", "admin mode");
+        descriptions.put("hidestaff", "hide all staffs");
+        descriptions.put("logs", "vanquil Staff logger");
 
-        aliases.put("logs", "&6or &8{ &c/notifications &8}");
-        aliases.put("slowchat (seconds)", "&6or &8{ &c/chatslow &8}");
-        aliases.put("revive", "&6or &8{ &c/invrestore &8}");
-        aliases.put("vanish", "&6or &8{ &c/hidestaff, /v &8}");
-        aliases.put("staffs", "&6or &8{ &c/stafflist,/slist &8}");
-        aliases.put("cps", "&6or &8{ &c/cpsreport &8}");
-        aliases.put(label + " reload", "&6or &8{ &c/vs reload &8}");
-        aliases.put(label + " help", "&6or &8{ &c/vs help &8}");
-        aliases.put("staff", "&6or &8{ &c/mod, /staffmode &8}");
-        aliases.put("adminmode", "&6or &8{ &c/am, /amode &8}");
+        aliases.put("logs", "notifications");
+        aliases.put("slowchat (seconds)", "chatslow");
+        aliases.put("revive", "invrestore");
+        aliases.put("vanish", "v");
+        aliases.put("staffs", "stafflist,slist");
+        aliases.put("cps", "cpsreport");
+        aliases.put("staff", "mod,staffmode");
+        aliases.put("adminmode", "am,amode");
 
-        player.sendMessage(Utility.colorize("&a&lVanquil Staff &8>> &7Help Page"));
-        player.sendMessage("");
-        player.sendMessage(Utility.colorize("&a&lVanquil Staff &8>> &6[] - &fNot Required"));
-        player.sendMessage(Utility.colorize("&a&lVanquil Staff &8>> &6() - &fRequired"));
-        player.sendMessage("");
-        for (String key : descriptions.keySet()) {
 
-            TextComponent part1 = new TextComponent(TextComponent.fromLegacyText(Utility.colorize("&a&lVanquil &8>> ")));
-            TextComponent part2 = new TextComponent(TextComponent.fromLegacyText(Utility.colorize("&f/" + key)));
-            if(aliases.containsKey(key)) {
-                TextComponent textComponent = new TextComponent(TextComponent.fromLegacyText(" " + Utility.colorize(aliases.get(key))));
-                part2.addExtra(textComponent);
-            }
-            part2.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/" + key));
-            part2.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(descriptions.get(key)).color(net.md_5.bungee.api.ChatColor.YELLOW).create()));
-            player.spigot().sendMessage(part1, part2);
-
-            part1 = null;
-            part2 = null;
+        List<String> list = new ArrayList<>(descriptions.keySet());
+        PaginatedList paginatedList = new PaginatedList(list, 8);
+        if(page <= 0) {
+            page = 1;
         }
+        if(page > paginatedList.getMaximumPage()) {
+            page = paginatedList.getMaximumPage();
+        }
+        String prev = page == 1 ? "&7[<]" : "&b[<]";
+        String next = page == paginatedList.getMaximumPage() ? "&7[>]" : "&b[>]";
+        TextComponent prevButton = new TextComponent(TextComponent.fromLegacyText(Utility.colorize(prev)));
+        if(page > 1) {
+            prevButton.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Go to previous page").color(net.md_5.bungee.api.ChatColor.YELLOW).create()));
+            prevButton.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, label + " " + argument + " " + --page));
+        }
+        TextComponent nextButton = new TextComponent(TextComponent.fromLegacyText(Utility.colorize(next)));
+        if(page < paginatedList.getMaximumPage()) {
+            nextButton.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Go to next page").color(net.md_5.bungee.api.ChatColor.YELLOW).create()));
+            nextButton.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, label + " " + argument + " " + ++page));
+        }
+        TextComponent header = new TextComponent(TextComponent.fromLegacyText(Utility.colorize("&6----,[ &2Help for command \"" + label +  " " + argument + "\" ")));
+        TextComponent pageModifier = new TextComponent(TextComponent.fromLegacyText(Utility.colorize("&6 " + page + "/" + paginatedList.getMaximumPage() + " ")));
+        TextComponent subHeader = new TextComponent(TextComponent.fromLegacyText(Utility.colorize("&6 ],____")));
+        player.spigot().sendMessage(header, prevButton, pageModifier, nextButton, subHeader);
+        List<String> finalList = paginatedList.getPage(page);
+        for (String key : finalList) {
+
+            String alias = "," + aliases.getOrDefault(key, "");
+            TextComponent command = new TextComponent(TextComponent.fromLegacyText(Utility.colorize("&b/" + key + alias + " ")));
+            TextComponent description = new TextComponent(TextComponent.fromLegacyText(Utility.colorize("&e" + descriptions.get(key))));
+
+            player.spigot().sendMessage(command, description);
+
+            command = null;
+            description = null;
+        }
+        list = null;
+        paginatedList = null;
+        prev = null;
+        next = null;
+        prevButton = null;
+        nextButton = null;
+        header = null;
+        pageModifier = null;
+        subHeader = null;
+        finalList = null;
         descriptions = null;
         aliases = null;
     }
 
-    public static void sendHelpPage(CommandSender sender, String label) {
+    public static void sendHelpPage(CommandSender sender, int page, String label, String argument) {
         HashMap<String, String> descriptions = new HashMap<>();
         HashMap<String, String> aliases = new HashMap<>();
 
-        descriptions.put("slowchat (seconds)", "Slows chat");
-        descriptions.put("unslow", "Un slow chat");
-        descriptions.put("freeze [player / -all]", "Freeze a player");
-        descriptions.put("falerts", "Listen to all censored chat");
-        descriptions.put("filter", "Disable or enable chat filtering");
-        descriptions.put("blacklist (player) (reason) [-p]", "Black list a player");
-        descriptions.put("revive", "Restore lost inventory");
-        descriptions.put("vanish", "Hide to other players");
-        descriptions.put("staffs", "Staff list");
-        descriptions.put("cps", "Listen to all click per listeners over 1 minute period");
-        descriptions.put("report (player) (reason)", "Opens a menu to report a player");
-        descriptions.put("reports", "Lists of all the reports");
-        descriptions.put(label + " reload", "Reload the config");
-        descriptions.put(label + " help", "Displays this");
-        descriptions.put("staff", "Staff mode");
-        descriptions.put("adminmode", "Admin mode");
-        descriptions.put("hidestaff", "Hide all staffs");
-        descriptions.put("logs", "Vanquil Staff logger");
+        descriptions.put(label + " help,? (page)", "display this");
+        descriptions.put("slowchat (seconds)", "slows chat");
+        descriptions.put("unslow", "unslow chat");
+        descriptions.put("freeze [player / -all]", "freeze a player");
+        descriptions.put("falerts", "listen to all censored chat");
+        descriptions.put("filter", "disable or enable chat filtering");
+        descriptions.put("blacklist (player) (reason) [-p]", "black list a player");
+        descriptions.put("revive", "restore lost inventory");
+        descriptions.put("vanish", "hide to other players");
+        descriptions.put("staffs", "staff list");
+        descriptions.put("cps", "listen to all click per listeners over 1 minute period");
+        descriptions.put("report (player) (reason)", "opens a menu to report a player");
+        descriptions.put("reports", "lists of all the reports");
+        descriptions.put(label + " reload", "reload the config");
+        descriptions.put("staff", "staff mode");
+        descriptions.put("adminmode", "admin mode");
+        descriptions.put("hidestaff", "hide all staffs");
+        descriptions.put("logs", "vanquil Staff logger");
 
-        aliases.put("logs", "&6or &8{ &c/notifications &8}");
-        aliases.put("slowchat (seconds)", "&6or &8{ &c/chatslow &8}");
-        aliases.put("revive", "&6or &8{ &c/invrestore &8}");
-        aliases.put("vanish", "&6or &8{ &c/v &8}");
-        aliases.put("staffs", "&6or &8{ &c/stafflist,/slist &8}");
-        aliases.put("cps", "&6or &8{ &c/cpsreport &8}");
-        aliases.put(label + " reload", "&6or &8{ &c/vs reload &8}");
-        aliases.put(label + " help", "&6or &8{ &c/vs help &8}");
-        aliases.put("staff", "&6or &8{ &c/mod, /staffmode &8}");
-        aliases.put("adminmode", "&6or &8{ &c/am, /amode &8}");
+        aliases.put("logs", "notifications");
+        aliases.put("slowchat (seconds)", "chatslow");
+        aliases.put("revive", "invrestore");
+        aliases.put("vanish", "v");
+        aliases.put("staffs", "stafflist,slist");
+        aliases.put("cps", "cpsreport");
+        aliases.put("staff", "mod,staffmode");
+        aliases.put("adminmode", "am,amode");
 
-        sender.sendMessage(Utility.colorize("&a&lVanquil Staff &8>> &7Help Page"));
-        sender.sendMessage("");
-        sender.sendMessage(Utility.colorize("&a&lVanquil Staff &8>> &6[] - &fNot Required"));
-        sender.sendMessage(Utility.colorize("&a&lVanquil Staff &8>> &6() - &fRequired"));
-        sender.sendMessage("");
-        for (String key : descriptions.keySet()) {
 
-            String alias = aliases.getOrDefault(key, "");
-            sender.sendMessage(Utility.colorize("&a&lVanquil &8>> &f" + "/" + key + " " + alias + "&f: " + descriptions.get(key)));
+        List<String> list = new ArrayList<>(descriptions.keySet());
+        PaginatedList paginatedList = new PaginatedList(list, 8);
+        List<String> finalList = paginatedList.getPage(page);
+
+        sender.sendMessage(Utility.colorize("&6____,[ &2Help for command \"" + label + " " + argument + "\" &6" + page + "/" + paginatedList.getMaximumPage() + " ],____"));
+        for (String key : finalList) {
+
+            String alias = "," + aliases.getOrDefault(key, "");
+            sender.sendMessage(Utility.colorize("&b/" + key + alias + " &e" + descriptions.get(key)));
         }
         descriptions = null;
         aliases = null;

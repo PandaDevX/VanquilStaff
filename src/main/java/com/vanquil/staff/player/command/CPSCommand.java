@@ -40,7 +40,7 @@ public class CPSCommand implements CommandExecutor {
             Bukkit.getScheduler().cancelTask(Storage.cpsTaskID.get(player.getUniqueId().toString()));
             Storage.cpsTaskID.remove(player.getUniqueId().toString());
 
-            sender.sendMessage(Utility.colorize("&aSuccessfully abort listening to all CPS"));
+            sender.sendMessage(Utility.colorize("&a&lVanquil &8>> &aSuccessfully abort listening to all CPS"));
 
             return true;
         }
@@ -51,13 +51,13 @@ public class CPSCommand implements CommandExecutor {
             public void run() {
                 Storage.cpsListeners.remove(player.getUniqueId().toString());
                 Storage.cpsTaskID.remove(player.getUniqueId().toString());
-                player.sendMessage(Utility.colorize("&c&lCPS>> &fFinished listening"));
+                player.sendMessage(Utility.colorize("&a&lVanquil &8>> &fFinished listening CPS"));
             }
         };
         runnable.runTaskLater(Staff.getInstance(), (60 * 20));
         Storage.cpsTaskID.put(player.getUniqueId().toString(), runnable.getTaskId());
 
-        sender.sendMessage(Utility.colorize("&c&lCPS>> &fStarted listening"));
+        sender.sendMessage(Utility.colorize("&a&lVanquil &8>> &fStarted listening CPS"));
 
         runnable = null;
         return false;

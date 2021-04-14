@@ -31,7 +31,7 @@ public class ReportCreationListener implements Listener {
         if(!Storage.playerReport.containsKey(e.getWhoClicked().getUniqueId().toString())) {
             e.setCancelled(true);
             clickEvent.getPlayer().closeInventory();
-            clickEvent.getPlayer().sendMessage(Utility.colorize("&6&lReport &cTimed out"));
+            clickEvent.getPlayer().sendMessage(Utility.colorize("&a&lVanquil &8>> &cTimed out"));
             return;
         }
         if(clickEvent.clicked("submit")) {
@@ -41,7 +41,7 @@ public class ReportCreationListener implements Listener {
                 e.setCancelled(true);
                 e.getWhoClicked().closeInventory();
 
-                clickEvent.getPlayer().sendMessage(Utility.colorize("&6&lReport &aSuccessfully sent the report"));
+                clickEvent.getPlayer().sendMessage(Utility.colorize("&a&lVanquil &8>> &aSuccessfully sent the report"));
                 Storage.playerReportCoolDown.put(clickEvent.getPlayer().getUniqueId().toString(), (System.currentTimeMillis() + ((60 * 2) * 1000)));
 
                 new BukkitRunnable() {
@@ -63,7 +63,7 @@ public class ReportCreationListener implements Listener {
 
         if(clickEvent.clicked("url")) {
             clickEvent.getPlayer().closeInventory();
-            clickEvent.getPlayer().sendMessage(Utility.colorize("&6&lReport &7Enter supporting url or &acancel &7to cancel&7Enter support"));
+            clickEvent.getPlayer().sendMessage(Utility.colorize("&a&lVanquil &8>> &7Enter supporting url or &acancel &7to cancel&7Enter support"));
             Storage.playerReportEditing.put(clickEvent.getPlayer().getUniqueId().toString(), "url");
             e.setCancelled(true);
             clickEvent = null;
@@ -72,7 +72,7 @@ public class ReportCreationListener implements Listener {
 
         if(clickEvent.clicked("reason")) {
             clickEvent.getPlayer().closeInventory();
-            clickEvent.getPlayer().sendMessage(Utility.colorize("&6&lReason &7Enter reason or &acancel &7to cancel"));
+            clickEvent.getPlayer().sendMessage(Utility.colorize("&a&lVanquil &8>> &7Enter reason or &acancel &7to cancel"));
             Storage.playerReportEditing.put(clickEvent.getPlayer().getUniqueId().toString(), "reason");
             e.setCancelled(true);
             clickEvent = null;

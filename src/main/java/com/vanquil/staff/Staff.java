@@ -103,7 +103,7 @@ public final class Staff extends JavaPlugin {
             DatabaseManager.connect(getConfig());
             getLogger().info("Successfully connected to database");
         } catch (ClassNotFoundException | SQLException e) {
-            // ignore
+            getLogger().info("No database found");
         }
 
 
@@ -113,13 +113,15 @@ public final class Staff extends JavaPlugin {
         counter.runTaskTimerAsynchronously(this, 0, 1);
 
         // auth staffs
-        for(Player player : Bukkit.getOnlinePlayers()) {
-            if(Utility.getStaffNames().contains(player.getName())) {
-                PinDatabase pinDatabase = new PinDatabase(player);
-                if(!pinDatabase.isLoggedIn()) {
-                    Utility.auth(player);
+        if(DatabaseManager.getConnection() != null && !Bukkit.getOnlinePlayers().isEmpty()) {
+            for(Player player : Bukkit.getOnlinePlayers()) {
+                if(Utility.getStaffNames().contains(player.getName())) {
+                    PinDatabase pinDatabase = new PinDatabase(player);
+                    if(!pinDatabase.isLoggedIn()) {
+                        Utility.auth(player);
+                    }
+                    pinDatabase = null;
                 }
-                pinDatabase = null;
             }
         }
     }

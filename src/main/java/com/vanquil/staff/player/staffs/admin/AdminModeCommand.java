@@ -24,12 +24,17 @@ public class AdminModeCommand implements CommandExecutor {
         }
 
         if(!(sender instanceof Player)) {
-            sender.sendMessage(Utility.colorize("&c&lHey &fyou must be a player to do that"));
+            sender.sendMessage(Utility.colorize("&a&lVanquil &8>> &fyou must be a player to do that"));
             return true;
         }
 
 
         Player player = (Player) sender;
+
+        if(args.length == 1 && args[0].equalsIgnoreCase("help")) {
+            Utility.sendAdminHelp(player);
+            return true;
+        }
 
         if(Storage.staffMode.contains(player.getUniqueId().toString())) {
             Utility.vanishPlayerSilent(player, Staff.getInstance());

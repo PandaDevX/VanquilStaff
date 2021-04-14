@@ -45,7 +45,7 @@ public class FreezeCommand implements CommandExecutor {
                 Storage.frozenPlayers.remove(player.getUniqueId().toString());
 
                 // send alert
-                Utility.sendTitle(player, "&6&lFreeze Tool", "&aYou are now able to move");
+                Utility.sendTitle(player, "&a&lVanquil", "&aYou are now able to move");
                 return true;
             }
 
@@ -53,7 +53,7 @@ public class FreezeCommand implements CommandExecutor {
             Storage.frozenPlayers.add(player.getUniqueId().toString());
 
             // send alert
-            Utility.sendTitle(player, "&6&lFreeze Tool", "&aYou are no longer able to move");
+            Utility.sendTitle(player, "&a&lVanquil", "&aYou are no longer able to move");
 
             return true;
         }
@@ -77,7 +77,7 @@ public class FreezeCommand implements CommandExecutor {
                     Storage.frozenPlayers.remove(online.getUniqueId().toString());
 
                     // send alert
-                    Utility.sendTitle(online, "&6&lFreeze Tool", "&aYou are now able to move");
+                    Utility.sendTitle(online, "&a&lVanquil", "&aYou are now able to move");
                     return true;
                 }
 
@@ -85,7 +85,7 @@ public class FreezeCommand implements CommandExecutor {
                 Storage.frozenPlayers.add(online.getUniqueId().toString());
 
                 // send alert
-                Utility.sendTitle(online, "&6&lFreeze Tool", "&aYou are no longer able to move");
+                Utility.sendTitle(online, "&a&lVanquil", "&aYou are no longer able to move");
 
             }
 
@@ -103,7 +103,7 @@ public class FreezeCommand implements CommandExecutor {
         if(target == null) {
 
             // send alert
-            sender.sendMessage(Utility.colorize("&c&lHey &fthat player is offline"));
+            sender.sendMessage(Utility.colorize("&a&lVanquil &8>> &fthat player is offline"));
             return true;
         }
 
@@ -114,9 +114,9 @@ public class FreezeCommand implements CommandExecutor {
             Storage.frozenPlayers.remove(target.getUniqueId().toString());
 
             // send alert
-            Utility.sendTitle(target, "&6&lFreeze Tool", "&aYou are now able to move");
+            Utility.sendTitle(target, "&a&lVanquil", "&aYou are now able to move");
 
-            sender.sendMessage(Utility.colorize("&a&lVanquil Staff &8>> &7Successfully removed frozen spell to that player"));
+            sender.sendMessage(Utility.colorize("&a&lVanquil &8>> &7Successfully removed frozen spell to that player"));
             return true;
         }
 
@@ -126,7 +126,7 @@ public class FreezeCommand implements CommandExecutor {
         // send alert
         Utility.sendTitle(target, "&6&lFreeze Tool", "&aYou are no longer able to move");
 
-        sender.sendMessage(Utility.colorize("&a&lVanquil Staff &8>> &7Successfully added frozen spell to that player"));
+        sender.sendMessage(Utility.colorize("&a&lVanquil &8>> &7Successfully added frozen spell to that player"));
 
         return false;
     }

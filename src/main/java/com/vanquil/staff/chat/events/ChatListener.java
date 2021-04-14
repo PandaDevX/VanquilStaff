@@ -100,7 +100,7 @@ public class ChatListener implements Listener {
                 textComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
                         new ComponentBuilder(e.getMessage()).create()));
 
-                TextComponent textComponent1 = new TextComponent(Utility.colorize("&c&lCensor: &f" + e.getPlayer().getDisplayName() + "'s "));
+                TextComponent textComponent1 = new TextComponent(Utility.colorize("&a&lVanquil &8>> &f" + e.getPlayer().getDisplayName() + "'s "));
                 textComponent1.addExtra(textComponent);
 
                 TextComponent textComponent2 = new TextComponent(Utility.colorize("&f contains unwanted words"));

@@ -41,6 +41,7 @@ public final class Staff extends JavaPlugin {
         fileUtil = new FileUtil(this, "staffs.yml", true);
         fileUtil.createFile();
         fileUtil = new FileUtil(this, "frozen.yml", false);
+        fileUtil.createFolderFor("data");
         fileUtil.createFile();
         getLogger().info("Storage loaded");
         fileUtil = null;

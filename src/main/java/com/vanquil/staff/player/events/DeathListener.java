@@ -25,6 +25,7 @@ public class DeathListener implements Listener {
     public void onDeath(PlayerDeathEvent e) {
 
         // check if player's inventory is empty
+        if(!e.getEntity().hasPermission("player.revive")) return;
         if(!emptyInventory(e.getEntity().getInventory())) {
 
             // save player inventory
@@ -51,6 +52,7 @@ public class DeathListener implements Listener {
     public void onRespawn(PlayerRespawnEvent e) {
 
         // check if player saved inventory
+        if(!e.getPlayer().hasPermission("player.revive")) return;
         if(!Storage.playerInventory.containsKey(e.getPlayer().getUniqueId().toString())
         && !Storage.playerArmors.containsKey(e.getPlayer().getUniqueId().toString())) return;
 

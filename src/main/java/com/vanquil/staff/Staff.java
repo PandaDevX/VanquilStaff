@@ -40,6 +40,8 @@ public final class Staff extends JavaPlugin {
         fileUtil.createFile();
         fileUtil = new FileUtil(this, "staffs.yml", true);
         fileUtil.createFile();
+        fileUtil = new FileUtil(this, "frozen.yml", false);
+        fileUtil.createFile();
         getLogger().info("Storage loaded");
         fileUtil = null;
 
@@ -74,6 +76,7 @@ public final class Staff extends JavaPlugin {
         new AdminModeCommand(this);
         new StaffLogsCommand(this);
         new StaffHideCommand(this);
+        new UnfreezeCommand(this);
 
         // listeners
         new StaffLogsListener(this);
@@ -149,13 +152,14 @@ public final class Staff extends JavaPlugin {
         Storage.defaultCD.clear();
         Storage.blackListPlayers.clear();
         Storage.vanishedPlayers.clear();
-        Storage.frozenPlayers.clear();
         Storage.filterAlerts.clear();
         Storage.playerSelection.clear();
         Storage.playerReport.clear();
         Storage.playerReportCoolDown.clear();
         Storage.playerReportEditing.clear();
         Storage.staffTool.clear();
+        Storage.playerFreezeScheduler.clear();
+        Storage.playerFreezeNotifier.clear();
         getLogger().info("All storage are closed");
 
         DatabaseManager.disconnect();

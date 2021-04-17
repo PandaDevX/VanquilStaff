@@ -84,23 +84,19 @@ public class StaffPlayerSelectionListener implements Listener {
                 }
 
                 // check if already frozen
-                if(Storage.frozenPlayers.contains(target.getUniqueId().toString())) {
+                if(Utility.isFrozen(target)) {
 
                     // unfreeze player
-                    Storage.frozenPlayers.remove(target.getUniqueId().toString());
+                    Utility.unfreezePlayer(target);
 
                     // send alert
-                    Utility.sendTitle(target, "&a&lVanquil", "&aYou are now able to move");
 
                     player.sendMessage(Utility.colorize("&a&lVanquil Staff &8>> &7Successfully removed frozen spell to that player"));
                     break;
                 }
 
                 // freeze self
-                Storage.frozenPlayers.add(target.getUniqueId().toString());
-
-                // send alert
-                Utility.sendTitle(target, "&a&lVanquil", "&aYou are no longer able to move");
+                Utility.freezePlayer(target);
 
                 player.sendMessage(Utility.colorize("&a&lVanquil Staff &8>> &7Successfully added frozen spell to that player"));
                 break;

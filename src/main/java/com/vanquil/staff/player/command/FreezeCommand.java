@@ -1,7 +1,6 @@
 package com.vanquil.staff.player.command;
 
 import com.vanquil.staff.Staff;
-import com.vanquil.staff.data.Storage;
 import com.vanquil.staff.utility.Utility;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -18,116 +17,42 @@ public class FreezeCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
-        // check if player
-        if(!(sender instanceof Player)) {
-            sender.sendMessage(Utility.colorize("&c&lHey &fyou must be a player to do that"));
-            return true;
-        }
-
-        // check arguments
-
-        // if no arguments
-        if(args.length == 0) {
-
-            // check permission
-
-            if(!sender.hasPermission("staff.freeze.self") || !sender.hasPermission("staff.freeze.*")) {
-                Utility.sendNoPermissionMessage(sender);
+        if(args.length < 2) {
+            if(!sender.hasPermission("staff.freeze.others")) {
+                sender.sendMessage(Utility.colorize("&a&lVanquil &8>> &7You do not have access to that command"));
                 return true;
             }
-
-            Player player = (Player) sender;
-
-            // check if already frozen
-            if(Storage.frozenPlayers.contains(player.getUniqueId().toString())) {
-
-                // unfreeze player
-                Storage.frozenPlayers.remove(player.getUniqueId().toString());
-
-                // send alert
-                Utility.sendTitle(player, "&a&lVanquil", "&aYou are now able to move");
-                return true;
-            }
-
-            // freeze self
-            Storage.frozenPlayers.add(player.getUniqueId().toString());
-
-            // send alert
-            Utility.sendTitle(player, "&a&lVanquil", "&aYou are no longer able to move");
-
-            return true;
-        }
-        // if player is freezing all
-
-        if(args[0].equalsIgnoreCase("-all")) {
-
-            // check permission
-
-            if(!sender.hasPermission("staff.freeze.all") || !sender.hasPermission("staff.freeze.*")) {
-                Utility.sendNoPermissionMessage(sender);
-                return true;
-            }
-
-            for(Player online : Bukkit.getOnlinePlayers()) {
-
-                // check if already frozen
-                if(Storage.frozenPlayers.contains(online.getUniqueId().toString())) {
-
-                    // unfreeze player
-                    Storage.frozenPlayers.remove(online.getUniqueId().toString());
-
-                    // send alert
-                    Utility.sendTitle(online, "&a&lVanquil", "&aYou are now able to move");
-                    return true;
-                }
-
-                // freeze self
-                Storage.frozenPlayers.add(online.getUniqueId().toString());
-
-                // send alert
-                Utility.sendTitle(online, "&a&lVanquil", "&aYou are no longer able to move");
-
-            }
-
-            return true;
-        }
-
-        if(!sender.hasPermission("staff.freeze.others") || !sender.hasPermission("staff.freeze.*")) {
-            Utility.sendNoPermissionMessage(sender);
+            Utility.sendCorrectArgument(sender, "freeze (player) (duration)");
+            sender.sendMessage(Utility.colorize("&7[format: 1<suffix>] [suffixes: y - year, M - month, w - week, d - day, h - hour, m - minute, s - second]"));
+            sender.sendMessage(Utility.colorize("&7-1 for permanent"));
             return true;
         }
 
         Player target = Bukkit.getPlayer(args[0]);
-
-        // if target is not online
         if(target == null) {
-
-            // send alert
-            sender.sendMessage(Utility.colorize("&a&lVanquil &8>> &fthat player is offline"));
+            sender.sendMessage(Utility.colorize("&a&lVanquil &8>> &7Error: &fplayer must be online"));
             return true;
         }
-
-        // check if already frozen
-        if(Storage.frozenPlayers.contains(target.getUniqueId().toString())) {
-
-            // unfreeze player
-            Storage.frozenPlayers.remove(target.getUniqueId().toString());
-
-            // send alert
-            Utility.sendTitle(target, "&a&lVanquil", "&aYou are now able to move");
-
-            sender.sendMessage(Utility.colorize("&a&lVanquil &8>> &7Successfully removed frozen spell to that player"));
+        if(args[1].equalsIgnoreCase("-1")) {
+            if(Utility.isFrozen(target)) {
+                sender.sendMessage(Utility.colorize("&a&lVanquil &8>> &7Player &f" + target.getName() + " &7is already frozen"));
+                return true;
+            }
+            Utility.freezePlayer(target);
+            sender.sendMessage(Utility.colorize("&a&lVanquil &8>> &7Player &f" + target.getName() + " &7has been frozen"));
             return true;
         }
-
-        // freeze self
-        Storage.frozenPlayers.add(target.getUniqueId().toString());
-
-        // send alert
-        Utility.sendTitle(target, "&6&lFreeze Tool", "&aYou are no longer able to move");
-
-        sender.sendMessage(Utility.colorize("&a&lVanquil &8>> &7Successfully added frozen spell to that player"));
-
+        if(Utility.isFrozen(target)) {
+            sender.sendMessage(Utility.colorize("&a&lVanquil &8>> &7Player &f" + target.getName() + " &7is already frozen"));
+            return true;
+        }
+        StringBuilder builder = new StringBuilder();
+        for(int i = 1; i < args.length; i++) {
+            builder.append(args[i]).append(" ");
+        }
+        String duration = builder.toString().trim();
+        Utility.freezePlayer(target, duration);
+        sender.sendMessage(Utility.colorize("&a&lVanquil &8>> &7Player &f" + target.getName() + " &7has been frozen for duration: &f" + duration));
         return false;
     }
 }

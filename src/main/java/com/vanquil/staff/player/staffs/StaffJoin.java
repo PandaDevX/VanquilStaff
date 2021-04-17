@@ -1,6 +1,7 @@
 package com.vanquil.staff.player.staffs;
 
 import com.vanquil.staff.Staff;
+import com.vanquil.staff.data.Storage;
 import com.vanquil.staff.utility.FileUtil;
 import com.vanquil.staff.utility.Utility;
 import org.bukkit.Bukkit;
@@ -22,8 +23,7 @@ public class StaffJoin implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
 
-        FileUtil fileUtil = new FileUtil(Staff.getInstance(), "staffs.yml", true);
-        Set<String> staffs = fileUtil.get().getConfigurationSection("Staffs").getKeys(false);
+        Set<String> staffs = Storage.staffLogger;
         if(staffs.contains(e.getPlayer().getName())) {
 
             e.setJoinMessage(null);
@@ -33,14 +33,13 @@ public class StaffJoin implements Listener {
                 OfflinePlayer player = Bukkit.getOfflinePlayer(staff);
 
                 if(player.isOnline()) {
-                    for(String message : fileUtil.get().getStringList("join")) {
-                        player.getPlayer().sendMessage(Utility.colorize(message.replace("{staff}", e.getPlayer().getName())));
-                    }
+                    if(player.getPlayer().equals(e.getPlayer()))
+                        continue;
+                    player.getPlayer().sendMessage(Utility.colorize("&a&lVanquil Logger &8>> &3" + e.getPlayer().getName() + " &7has come &aonline"));
                 }
                 player = null;
             }
         }
-        fileUtil = null;
         staffs = null;
     }
 }

@@ -2,7 +2,6 @@ package com.vanquil.staff.data;
 
 import com.vanquil.staff.database.Report;
 import org.bukkit.inventory.ItemStack;
-
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -14,13 +13,14 @@ public final class Storage {
     public static HashMap<String, Long> coolDown = new HashMap<>();
 
     // players
-    public static Set<String> frozenPlayers = new HashSet<>();
     public static Set<String> filterAlerts = new HashSet<>();
     public static Set<String> vanishedPlayers = new HashSet<>();
     public static Set<String> cpsListeners = new HashSet<>();
     public static Set<String> staffLogger = new HashSet<>();
     public static Set<String> hideStaffs = new HashSet<>();
     public static Set<String> staffMode = new HashSet<>();
+    public static HashMap<String, Integer> playerFreezeScheduler = new HashMap<>();
+    public static HashMap<String, Long> playerFreezeNotifier = new HashMap<>();
     public static HashMap<String, ItemStack[]> staffInventoryContents = new HashMap<>();
     public static HashMap<String, ItemStack[]> staffArmors = new HashMap<>();
     public static HashMap<String, ItemStack[]> staffExtras = new HashMap<>();

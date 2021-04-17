@@ -46,3 +46,5 @@ commands:
    logs:
       description: Vanquilstaff logger
       aliases: [notifications]
+   unfreeze:
+      description: unfreeze player

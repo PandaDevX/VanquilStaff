@@ -12,12 +12,8 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
-import net.minecraft.server.v1_16_R3.IChatBaseComponent;
-import net.minecraft.server.v1_16_R3.PacketPlayOutTitle;
-import net.minecraft.server.v1_16_R3.PlayerConnection;
 import org.bukkit.*;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.v1_16_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.inventory.Inventory;
@@ -27,15 +23,14 @@ import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("all")
 public final class Utility {
 
     public static String colorize(String message) {
@@ -784,6 +779,7 @@ public final class Utility {
     }
 
     public static void sendHelpPage(Player player, int page, String label, String argument) {
+        int currentPage = page;
         HashMap<String, String> descriptions = new HashMap<>();
         HashMap<String, String> aliases = new HashMap<>();
 
@@ -829,22 +825,24 @@ public final class Utility {
         TextComponent prevButton = new TextComponent(TextComponent.fromLegacyText(Utility.colorize(prev)));
         if(page > 1) {
             prevButton.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Go to previous page").color(net.md_5.bungee.api.ChatColor.YELLOW).create()));
-            prevButton.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, label + " " + argument + " " + --page));
+            prevButton.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/" + label + " " + argument + " " + (currentPage - 1)));
         }
         TextComponent nextButton = new TextComponent(TextComponent.fromLegacyText(Utility.colorize(next)));
         if(page < paginatedList.getMaximumPage()) {
             nextButton.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Go to next page").color(net.md_5.bungee.api.ChatColor.YELLOW).create()));
-            nextButton.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, label + " " + argument + " " + ++page));
+            nextButton.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/" + label + " " + argument + " " + (currentPage + 1)));
         }
-        TextComponent header = new TextComponent(TextComponent.fromLegacyText(Utility.colorize("&6----,[ &2Help for command \"" + label +  " " + argument + "\" ")));
+        TextComponent header = new TextComponent(TextComponent.fromLegacyText(Utility.colorize("&6____,[ &2Help for command \"" + label +  " " + argument + "\" ")));
         TextComponent pageModifier = new TextComponent(TextComponent.fromLegacyText(Utility.colorize("&6 " + page + "/" + paginatedList.getMaximumPage() + " ")));
         TextComponent subHeader = new TextComponent(TextComponent.fromLegacyText(Utility.colorize("&6 ],____")));
         player.spigot().sendMessage(header, prevButton, pageModifier, nextButton, subHeader);
         List<String> finalList = paginatedList.getPage(page);
         for (String key : finalList) {
 
-            String alias = "," + aliases.getOrDefault(key, "");
+            String alias = aliases.containsKey(key) ? "," + aliases.get(key) : "";
             TextComponent command = new TextComponent(TextComponent.fromLegacyText(Utility.colorize("&b/" + key + alias + " ")));
+            command.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(descriptions.get(key)).color(net.md_5.bungee.api.ChatColor.YELLOW).create()));
+            command.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/" + key + alias));
             TextComponent description = new TextComponent(TextComponent.fromLegacyText(Utility.colorize("&e" + descriptions.get(key))));
 
             player.spigot().sendMessage(command, description);
@@ -911,5 +909,94 @@ public final class Utility {
         }
         descriptions = null;
         aliases = null;
+    }
+
+    public static void freezePlayer(Player player, String duration) {
+        FileUtil fileUtil = new FileUtil(Staff.getInstance(), "frozen.yml", false);
+        if(isFrozen(player)) {
+            return;
+        }
+        fileUtil.get().set(player.getUniqueId().toString(), TimeUtil.serializeRaw(duration));
+        fileUtil.save();
+        fileUtil = null;
+
+        Storage.playerFreezeNotifier.put(player.getUniqueId().toString(), System.currentTimeMillis());
+        int id = new BukkitRunnable() {
+            public void run() {
+                long current = Storage.playerFreezeNotifier.get(player.getUniqueId().toString());
+                if(((System.currentTimeMillis() - current)/1000) >= 30) {
+                    Storage.playerFreezeNotifier.put(player.getUniqueId().toString(), System.currentTimeMillis());
+                    player.sendMessage(colorize("&8&b-------------------------"));
+                    player.sendMessage(colorize("&7You have been &eFROZEN&7."));
+                    player.sendMessage(colorize("&7You must join a support room in &e3 minutes &7or you will be &ebanned"));
+                    player.sendMessage(" ");
+                    player.sendMessage("&7Our discord: &ehttps://discord.gg/6TtVBAD7");
+                    player.sendMessage(colorize("&8&b-------------------------"));
+                }
+                sendTitle(player, "&a&lVanquil", "&7You have been frozen");
+            }
+        }.runTaskTimer(Staff.getInstance(), 0, 1).getTaskId();
+
+        Storage.playerFreezeScheduler.put(player.getUniqueId().toString(), id);
+    }
+
+    public static void freezePlayer(Player player) {
+        FileUtil fileUtil = new FileUtil(Staff.getInstance(), "frozen.yml", false);
+        if (isFrozen(player)) {
+            return;
+        }
+        fileUtil.get().set(player.getUniqueId().toString(), "");
+        fileUtil.save();
+        fileUtil = null;
+
+        Storage.playerFreezeNotifier.put(player.getUniqueId().toString(), System.currentTimeMillis());
+        int id = new BukkitRunnable() {
+            public void run() {
+                long current = Storage.playerFreezeNotifier.get(player.getUniqueId().toString());
+                if(((System.currentTimeMillis() - current)/1000) >= 30) {
+                    Storage.playerFreezeNotifier.put(player.getUniqueId().toString(), System.currentTimeMillis());
+                    player.sendMessage(colorize("&8&b-------------------------"));
+                    player.sendMessage(colorize("&7You have been &eFROZEN&7."));
+                    player.sendMessage(colorize("&7You must join a support room in &e3 minutes &7or you will be &ebanned"));
+                    player.sendMessage(" ");
+                    player.sendMessage("&7Our discord: &ehttps://discord.gg/6TtVBAD7");
+                    player.sendMessage(colorize("&8&b-------------------------"));
+                }
+                sendTitle(player, "&a&lVanquil", "&7You have been frozen");
+            }
+        }.runTaskTimer(Staff.getInstance(), 0, 20).getTaskId();
+
+        Storage.playerFreezeScheduler.put(player.getUniqueId().toString(), id);
+    }
+
+    public static void unfreezePlayer(OfflinePlayer player) {
+        FileUtil fileUtil = new FileUtil(Staff.getInstance(), "frozen.yml", false);
+        if (!isFrozen(player)) {
+            return;
+        }
+        fileUtil.get().set(player.getUniqueId().toString(), null);
+        fileUtil.save();
+        fileUtil = null;
+        Bukkit.getScheduler().cancelTask(Storage.playerFreezeScheduler.get(player.getUniqueId().toString()));
+        Storage.playerFreezeNotifier.remove(player.getUniqueId().toString());
+        Storage.playerFreezeScheduler.remove(player.getUniqueId().toString());
+    }
+
+    public static boolean isFrozen(OfflinePlayer player) {
+        FileUtil fileUtil = new FileUtil(Staff.getInstance(), "frozen.yml", false);
+        if(fileUtil.get().get(player.getUniqueId().toString()) == null) {
+            return false;
+        }
+        if(fileUtil.get().getString(player.getUniqueId().toString()).equals("")) {
+            return true;
+        }
+        long duration = fileUtil.get().getLong(player.getUniqueId().toString()) * 1000;
+        if(duration >
+                System.currentTimeMillis()) {
+            return true;
+        }
+        fileUtil.get().set(player.getUniqueId().toString(), null);
+        fileUtil.save();
+        return false;
     }
 }

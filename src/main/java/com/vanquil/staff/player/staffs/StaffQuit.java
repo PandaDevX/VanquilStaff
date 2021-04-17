@@ -1,6 +1,7 @@
 package com.vanquil.staff.player.staffs;
 
 import com.vanquil.staff.Staff;
+import com.vanquil.staff.data.Storage;
 import com.vanquil.staff.utility.FileUtil;
 import com.vanquil.staff.utility.Utility;
 import org.bukkit.Bukkit;
@@ -10,6 +11,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import java.util.List;
 import java.util.Set;
 
 public class StaffQuit implements Listener {
@@ -20,8 +22,7 @@ public class StaffQuit implements Listener {
 
     @EventHandler
     public void onQuit(PlayerQuitEvent e) {
-        FileUtil fileUtil = new FileUtil(Staff.getInstance(), "staffs.yml", true);
-        Set<String> staffs = fileUtil.get().getConfigurationSection("Staffs").getKeys(false);
+        Set<String> staffs = Storage.staffLogger;
         if(staffs.contains(e.getPlayer().getName())) {
 
             e.setQuitMessage(null);
@@ -31,14 +32,13 @@ public class StaffQuit implements Listener {
                 OfflinePlayer player = Bukkit.getOfflinePlayer(staff);
 
                 if(player.isOnline()) {
-                    for(String message : fileUtil.get().getStringList("join")) {
-                        player.getPlayer().sendMessage(Utility.colorize(message.replace("{staff}", e.getPlayer().getName())));
-                    }
+                    if(player.getPlayer().equals(e.getPlayer()))
+                        continue;
+                    player.getPlayer().sendMessage(Utility.colorize("&a&lVanquil Logger &8>> &3" + e.getPlayer().getName() + " &7has gone &coffline"));
                 }
                 player = null;
             }
         }
-        fileUtil = null;
         staffs = null;
     }
 }

@@ -11,8 +11,3 @@ Staffs:
        - '&7Status: &r{status}'
   RamenNoodles:
     prefix: '&8[&eDeveloper&8] &b'
-    
-join: 
-  - '&6{staff} &ahas joined'
-leave:
-  - '&6{staff} &cleft'

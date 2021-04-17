@@ -54,6 +54,21 @@ public class AdminModeListener implements Listener {
                 return;
             }
 
+            if(clicked(e, "CPS Checker")) {
+
+                e.getPlayer().performCommand("cps");
+                e.setCancelled(true);
+                return;
+            }
+
+            if(clicked(e, "Reports")) {
+
+                e.getPlayer().performCommand("reports");
+                e.setCancelled(true);
+                return;
+
+            }
+
             String name = Utility.stripColor(e.getItem().getItemMeta().getDisplayName());
 
             Storage.staffTool.put(e.getPlayer().getUniqueId().toString(), name);
